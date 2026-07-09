@@ -1,0 +1,188 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main class="container">
+  <!-- Back navigation -->
+  <div style="margin-top: 40px;">
+    <a href="/shop" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); display: inline-flex; align-items: center; gap: 8px;">
+      &larr; Back to all garments
+    </a>
+  </div>
+
+  <!-- Product details layout grid -->
+  <div class="product-detail-grid">
+    <!-- Left Column: Gallery -->
+    <div class="product-gallery">
+      <div class="gallery-main-wrap">
+        <img id="main-gallery-img" src="<%= product.images[0] %>" alt="<%= product.name %>">
+      </div>
+      <% if (product.images.length > 1) { %>
+        <div class="gallery-thumbs">
+          <% product.images.forEach((img, index) => { %>
+            <div class="gallery-thumb-item <%= index === 0 ? 'active' : '' %>" data-img="<%= img %>" aria-label="View product image <%= index + 1 %>">
+              <img src="<%= img %>" alt="Thumbnail <%= index + 1 %>">
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Right Column: Buying Details panel -->
+    <div class="product-buy-panel">
+      <div class="product-title-price">
+        <span class="product-category"><%= product.category %></span>
+        <h1 class="product-detail-title"><%= product.name %></h1>
+        <div class="product-detail-price">₹<%= parseFloat(product.price).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></div>
+      </div>
+
+      <!-- Description -->
+      <p style="font-size: 0.9rem; line-height: 1.8; color: var(--text-muted);">
+        <%= product.description %>
+      </p>
+
+      <!-- Color Indicator -->
+      <div class="product-selection-group">
+        <h4>Colorways Available</h4>
+        <div class="color-variants-indicator">
+          <% product.colors.forEach(color => { %>
+            <span class="color-variant-tag"><%= color %></span>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- Size Selector -->
+      <div class="product-selection-group">
+        <h4 style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Select Size</span>
+          <span id="stock-warning-label" style="text-transform: uppercase; font-size: 0.65rem; color: #EF4444; letter-spacing: 0.05em; font-weight: bold;"></span>
+        </h4>
+        <div class="size-selector-wrap">
+          <% 
+            const sizes = ['S', 'M', 'L', 'XL'];
+            sizes.forEach(sz => {
+              const variant = product.variants.find(v => v.size === sz);
+              const stock = variant ? variant.stock : 0;
+          %>
+            <button class="size-option-btn" 
+                    data-size="<%= sz %>" 
+                    data-stock="<%= stock %>"
+                    <%= stock === 0 ? 'disabled' : '' %>
+                    aria-label="Size <%= sz %>, <%= stock > 0 ? stock + ' left' : 'Out of stock' %>">
+              <%= sz %>
+            </button>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- Add to Cart CTA -->
+      <button id="add-to-cart-btn" 
+              class="btn" 
+              style="width: 100%; padding: 22px 0;"
+              data-product-id="<%= product.id %>"
+              data-product-name="<%= product.name %>"
+              data-product-price="<%= product.price %>"
+              data-product-image="<%= product.images[0] %>"
+              data-product-slug="<%= product.slug %>">
+        Add to Shopping Bag
+      </button>
+
+      <!-- Details Accordions -->
+      <div class="product-accordion">
+        <!-- Details Accordion -->
+        <div class="accordion-item active">
+          <div class="accordion-header">
+            Details & Dimensions
+            <span>&plus;</span>
+          </div>
+          <div class="accordion-content" style="display: block;">
+            Handmade in the Paris atelier. Relaxed silhouette, structured shapes, subtle stitching lines. Fabric holds structural body in motion. Cut for comfort, tailored to flatter.
+          </div>
+        </div>
+
+        <!-- Care instructions Accordion -->
+        <div class="accordion-item">
+          <div class="accordion-header">
+            Fabrication & Care
+            <span>&plus;</span>
+          </div>
+          <div class="accordion-content">
+            <%= product.care_instructions %>
+          </div>
+        </div>
+
+        <!-- Shipping Accordion -->
+        <div class="accordion-item">
+          <div class="accordion-header">
+            Shipping & Returns
+            <span>&plus;</span>
+          </div>
+          <div class="accordion-content">
+            Complimentary shipping within India and Europe. Delivered in custom linen garment covers. Returns are accepted within 14 days of receipt for archive store credit.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products / Sartorial suggestions -->
+  <section style="margin-top: 120px;">
+    <h2 class="section-title">L'Accompagnement</h2>
+    <div class="product-grid">
+      <% if (relatedProducts && relatedProducts.length > 0) { %>
+        <% relatedProducts.forEach(rel => { %>
+          <article class="product-card">
+            <a href="/products/<%= rel.slug %>" class="product-image-wrap" aria-label="View <%= rel.name %>">
+              <img src="<%= rel.images[0] %>" alt="<%= rel.name %>" loading="lazy">
+            </a>
+            <div class="product-info">
+              <div class="product-details">
+                <a href="/products/<%= rel.slug %>" class="product-name"><%= rel.name %></a>
+                <span class="product-category"><%= rel.category %></span>
+              </div>
+              <span class="product-price">₹<%= parseFloat(rel.price).toLocaleString('en-IN') %></span>
+            </div>
+          </article>
+        <% }) %>
+      <% } else { %>
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; grid-column: span 3;">No matching recommendations at this time.</p>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Thumbnail clicking behavior
+    const thumbs = document.querySelectorAll('.gallery-thumb-item');
+    const mainImg = document.getElementById('main-gallery-img');
+    
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        thumbs.forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+        mainImg.src = thumb.getAttribute('data-img');
+      });
+    });
+
+    // Sizing button active classes & stock warnings
+    const sizeBtns = document.querySelectorAll('.size-option-btn');
+    const warningLabel = document.getElementById('stock-warning-label');
+
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeBtns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        // Show warning if stock is low
+        const stock = parseInt(btn.getAttribute('data-stock'));
+        if (stock < 5 && stock > 0) {
+          warningLabel.textContent = `Sartorial warning: Only ${stock} items left in stock`;
+        } else {
+          warningLabel.textContent = '';
+        }
+      });
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Dynamic SEO Metadata -->
+  <title><%= typeof title !== 'undefined' ? title : 'Maison Éther | High Couture & Artisanal Garments' %></title>
+  <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'Maison Éther is a Parisian clothing brand dedicated to tailoring slow-fashion, luxurious fabric selections, and distinct, modern silhouettes.' %>">
+  
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Maison Éther | High Couture' %>">
+  <meta property="og:description" content="<%= typeof description !== 'undefined' ? description : 'Artisanal Parisian luxury garments.' %>">
+  <meta property="og:type" content="website">
+  
+  <!-- Fonts & Core Stylesheets -->
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <!-- Render Schema.org Product Structured Data if provided -->
+  <% if (typeof structuredData !== 'undefined' && structuredData) { %>
+    <script type="application/ld+json">
+      <%- JSON.stringify(structuredData) %>
+    </script>
+  <% } %>
+</head>

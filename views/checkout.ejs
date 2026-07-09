@@ -1,0 +1,146 @@
+<%- include('partials/head') %>
+
+<!-- Load Razorpay Checkout.js SDK library -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<%- include('partials/header') %>
+
+<main class="container" id="checkout-page-container">
+  <div style="margin-top: 40px;">
+    <a href="/cart" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); display: inline-flex; align-items: center; gap: 8px;">
+      &larr; Return to shopping bag
+    </a>
+  </div>
+
+  <h2 class="section-title">Checkout</h2>
+
+  <!-- Checkout details form grid -->
+  <div class="checkout-layout">
+    <!-- Left: Shipping Form -->
+    <form id="checkout-details-form" class="form-section">
+      <h3>Shipping Information</h3>
+      
+      <div class="form-grid">
+        <div class="input-wrap">
+          <label for="checkout-name">Full Name *</label>
+          <input type="text" id="checkout-name" required placeholder="e.g. Jean Constant">
+        </div>
+        <div class="input-wrap">
+          <label for="checkout-phone">Mobile Phone *</label>
+          <input type="tel" id="checkout-phone" required placeholder="e.g. +91 9876543210">
+        </div>
+      </div>
+
+      <div class="form-grid full">
+        <div class="input-wrap">
+          <label for="checkout-email">Email Address *</label>
+          <input type="email" id="checkout-email" required placeholder="e.g. constant@atelier.com">
+        </div>
+      </div>
+
+      <div class="form-grid full">
+        <div class="input-wrap">
+          <label for="checkout-address">Delivery Address *</label>
+          <input type="text" id="checkout-address" required placeholder="Street address, Apartment, Suite number">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="input-wrap">
+          <label for="checkout-city">Town / City *</label>
+          <input type="text" id="checkout-city" required placeholder="e.g. Paris">
+        </div>
+        <div class="input-wrap">
+          <label for="checkout-zip">Postal / ZIP Code *</label>
+          <input type="text" id="checkout-zip" required placeholder="e.g. 75008">
+        </div>
+      </div>
+
+      <div class="form-grid full">
+        <div class="input-wrap">
+          <label for="checkout-country">Country / Region *</label>
+          <select id="checkout-country" required>
+            <option value="India">India</option>
+            <option value="France">France</option>
+            <option value="Italy">Italy</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="United States">United States</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin: 20px 0; border: 1px solid var(--border-color); padding: 20px;">
+        <p style="font-size: 0.75rem; text-transform: uppercase; font-weight: bold; letter-spacing: 0.1em; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: var(--accent-color);"></span>
+          Razorpay Secure Checkout
+        </p>
+        <p style="font-size: 0.7rem; color: var(--text-muted); line-height: 1.6;">
+          Your payment transactions are processed securely through Razorpay Gateways. In test mode, you can use any dummy card credentials to complete the mock purchase.
+        </p>
+      </div>
+
+      <button type="submit" class="btn" style="width: 100%; padding: 20px 0;">
+        Place Order & Initiate Payment
+      </button>
+    </form>
+
+    <!-- Right: Summary Side panel -->
+    <aside class="checkout-summary">
+      <h3>Your Selection</h3>
+      
+      <!-- Checkout lines lists -->
+      <div class="checkout-items-list" id="checkout-items-list">
+        <!-- Rendered dynamically by cart.js -->
+      </div>
+
+      <div style="border-top: 1px solid var(--border-color); padding-top: 20px; display: flex; flex-direction: column; gap: 15px;">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="checkout-subtotal">₹0.00</span>
+        </div>
+        
+        <!-- Coupon discount row -->
+        <div class="summary-row" id="discount-row" style="display: none; color: var(--accent-color);">
+          <span id="discount-percent-label">Discount</span>
+          <span id="checkout-discount-amount">&minus;₹0.00</span>
+        </div>
+
+        <div class="summary-row">
+          <span>Delivery Surcharges</span>
+          <span style="color: var(--accent-color); font-weight: 500;">Complimentary</span>
+        </div>
+
+        <div class="summary-row total">
+          <span>Grand Total</span>
+          <span id="checkout-total">₹0.00</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<script>
+  // Dynamic checkout billing discount adjust logic
+  document.addEventListener('DOMContentLoaded', () => {
+    const discount = sessionStorage.getItem('maison_ether_discount');
+    if (discount) {
+      const discountRow = document.getElementById('discount-row');
+      const discountLabel = document.getElementById('discount-percent-label');
+      const discountAmount = document.getElementById('checkout-discount-amount');
+      const totalLabel = document.getElementById('checkout-total');
+      
+      // Calculate
+      let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      let pct = parseInt(discount);
+      let discountVal = subtotal * (pct / 100);
+      let finalVal = subtotal - discountVal;
+
+      if (discountRow) discountRow.style.display = 'flex';
+      if (discountLabel) discountLabel.textContent = `Discount Code (${pct}% Off)`;
+      if (discountAmount) discountAmount.textContent = `&minus;₹${discountVal.toLocaleString('en-IN')}`;
+      if (totalLabel) totalLabel.textContent = `₹${finalVal.toLocaleString('en-IN')}`;
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

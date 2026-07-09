@@ -1,0 +1,130 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main>
+  <!-- Hero Banner Section -->
+  <section class="hero-section">
+    <!-- Option A lookbook Horizontal Scroller (Active in Light Theme) -->
+    <div class="lookbook-scroller-container">
+      <!-- Slide 1 -->
+      <div class="lookbook-slide">
+        <div class="lookbook-image-container">
+          <img src="https://images.unsplash.com/photo-1539008885128-40d24f3b8015?q=80&w=1600&auto=format&fit=crop" alt="Mulberry silk evening collection">
+        </div>
+        <div class="lookbook-overlay">
+          <p>La Nouvelle Collection</p>
+          <h2>L'Éclipse Silk</h2>
+          <a href="/shop" class="btn btn-small">View Garments</a>
+        </div>
+      </div>
+      
+      <!-- Slide 2 -->
+      <div class="lookbook-slide">
+        <div class="lookbook-image-container">
+          <img src="https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1600&auto=format&fit=crop" alt="Virgin wool outerwear coat fitting">
+        </div>
+        <div class="lookbook-overlay">
+          <p>Tailored Outerwear</p>
+          <h2>Le Vent Woolen</h2>
+          <a href="/shop" class="btn btn-small">Explore Coats</a>
+        </div>
+      </div>
+      
+      <!-- Slide 3 -->
+      <div class="lookbook-slide">
+        <div class="lookbook-image-container">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1600&auto=format&fit=crop" alt="Cloud-like cashmere knitwear detail">
+        </div>
+        <div class="lookbook-overlay">
+          <p>Mongolian Cashmere</p>
+          <h2>L'Aura Knitwear</h2>
+          <a href="/shop" class="btn btn-small">Browse Knits</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroller indicators for Option A Lookbook -->
+    <div class="scroller-indicators">
+      <span class="indicator-dot active"></span>
+      <span class="indicator-dot"></span>
+      <span class="indicator-dot"></span>
+    </div>
+
+    <!-- Option B Spotlight Texture Hero (Active in Dark Theme) -->
+    <div class="spotlight-hero-container">
+      <div class="spotlight-base">
+        <!-- Low contrast textured silhouette background -->
+        <img src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1600&auto=format&fit=crop" alt="Dark atelier backdrop silhouette">
+        <!-- Cursor following magnifying lens showing high contrast texture weave -->
+        <div class="spotlight-lens"></div>
+      </div>
+      <div class="spotlight-text-overlay">
+        <p>L'Atelier de Nuit</p>
+        <h2>Maison Éther</h2>
+        <p style="margin-top: 15px; font-size: 0.75rem; color: var(--text-muted);">MOVE CURSOR OVER BANNER TO REVEAL FABRIC TEXTURE DETAILS</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <!-- Featured Collection Grid -->
+    <h2 class="section-title">La Collection Principale</h2>
+    <div class="product-grid">
+      <% if (featuredProducts && featuredProducts.length > 0) { %>
+        <% featuredProducts.forEach(product => { %>
+          <article class="product-card">
+            <a href="/products/<%= product.slug %>" class="product-image-wrap" aria-label="View details of <%= product.name %>">
+              <img src="<%= product.images[0] %>" alt="<%= product.name %>" loading="lazy">
+            </a>
+            <div class="product-info">
+              <div class="product-details">
+                <a href="/products/<%= product.slug %>" class="product-name"><%= product.name %></a>
+                <span class="product-category"><%= product.category %></span>
+              </div>
+              <span class="product-price">₹<%= parseFloat(product.price).toLocaleString('en-IN') %></span>
+            </div>
+          </article>
+        <% }) %>
+      <% } else { %>
+        <p style="grid-column: span 3; text-align: center; color: var(--text-muted); font-size: 0.9rem;">No garments currently on exhibition.</p>
+      <% } %>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 120px;">
+      <a href="/shop" class="btn btn-secondary">Explore All Garments</a>
+    </div>
+
+    <!-- Editorial Brand Story Teaser -->
+    <section class="brand-story-teaser">
+      <div class="brand-story-grid">
+        <div class="brand-story-text">
+          <h3>An Architecture of Fabric</h3>
+          <p>
+            We believe that a garment is an spatial experience. At Maison Éther, every thread of Mongolian cashmere, every warp of French silk, and every yard of virgin wool is selected for its weight, its hand, and how it holds volume in motion. 
+          </p>
+          <p>
+            We do not follow industrial schedules. We curate slow couture. Each piece is patterned, cut, and assembled by hand in our Parisian workshop.
+          </p>
+          <a href="/about" class="btn btn-secondary">Read Our Story</a>
+        </div>
+        <div class="brand-story-image">
+          <img src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=800&auto=format&fit=crop" alt="Artisanal pattern drafting in progress" loading="lazy">
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Newsletter signup banner -->
+  <section class="newsletter-section">
+    <div class="newsletter-container">
+      <h3>Newsletter</h3>
+      <p>Subscribe to receive seasonal collections, private show schedules, and limited archive releases.</p>
+      <form class="newsletter-form" onsubmit="alert('Thank you for subscribing.'); this.reset(); return false;">
+        <input type="email" placeholder="YOUR EMAIL ADDRESS" aria-label="Newsletter email address" required>
+        <button type="submit">JOIN</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

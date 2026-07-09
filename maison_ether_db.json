@@ -1,0 +1,340 @@
+{
+  "products": [
+    {
+      "id": "prod_1",
+      "name": "L'Éclipse Silk Evening Dress",
+      "slug": "leclipse-silk-evening-dress",
+      "description": "A flowing floor-length evening dress crafted from heavy 30mm mulberry silk. Cut with an asymmetrical cowl neck, delicate bias-cut seams that trace the silhouette, and a dramatic, draped low open back. Designed for effortless grace in high-evening affairs.",
+      "care_instructions": "Dry clean only. Store on a padded hanger away from direct sunlight. Cool iron on reverse side if needed.",
+      "price": 1850,
+      "category": "Dresses",
+      "colors": [
+        "Noir",
+        "Burgundy"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1539008885128-40d24f3b8015?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "meta_title": "L'Éclipse Silk Evening Dress - Maison Éther",
+      "meta_description": "Discover the L'Éclipse evening gown in heavy mulberry silk. Signature draped cowl back and asymmetric couture cut.",
+      "created_at": "2026-07-09T13:04:22.272Z"
+    },
+    {
+      "id": "prod_2",
+      "name": "Le Vent Woolen Trench Coat",
+      "slug": "le-vent-woolen-trench-coat",
+      "description": "A structural, double-breasted double-faced trench coat tailored from brushed virgin wool and cashmere. Designed with drop shoulders, an oversized storm flap, hand-finished blind seams, and an adjustable belt to cinch the waist for a voluminous silhouette.",
+      "care_instructions": "Professional dry clean only. Brush with a soft wool brush between wears to maintain fabric nap.",
+      "price": 2450,
+      "category": "Outerwear",
+      "colors": [
+        "Bone",
+        "Charcoal"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "meta_title": "Le Vent Virgin Wool Trench Coat - Maison Éther",
+      "meta_description": "An oversized double-faced wool trench coat. Expertly hand-finished blind seams and structural silhouette.",
+      "created_at": "2026-07-09T13:04:22.274Z"
+    },
+    {
+      "id": "prod_3",
+      "name": "L'Aura Cashmere Knit Sweater",
+      "slug": "laura-cashmere-knit-sweater",
+      "description": "A relaxed, heavy rib-knit sweater crafted from 100% sustainably-sourced Mongolian cashmere. Soft mockup collar, dropped shoulders, and subtle side slits. The loose knit technique creates an incredibly soft, cloud-like drape.",
+      "care_instructions": "Hand wash cold with cashmere wash. Dry flat on a towel. Do not wring or hang to dry.",
+      "price": 980,
+      "category": "Knitwear",
+      "colors": [
+        "Bone",
+        "Forest Green"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "meta_title": "L'Aura Cashmere Knit Sweater - Maison Éther",
+      "meta_description": "Chunky rib-knit sweater in premium Mongolian cashmere. Dropped shoulders, mockup neck, relaxed editorial fit.",
+      "created_at": "2026-07-09T13:04:22.274Z"
+    },
+    {
+      "id": "prod_4",
+      "name": "La Plisse Tailored Trousers",
+      "slug": "la-plisse-tailored-trousers",
+      "description": "High-waisted, fluid wide-leg trousers tailored in wool crepe. Designed with sharp double front pleats, pressed creases, side slip pockets, and an internal sartorial waistband. Offers a clean, architectural drape that elongates the frame.",
+      "care_instructions": "Dry clean only. Steam or press with a damp cloth between the iron and fabric.",
+      "price": 1150,
+      "category": "Trousers",
+      "colors": [
+        "Charcoal",
+        "Bone"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "meta_title": "La Plisse Wool Crepe Tailored Trousers - Maison Éther",
+      "meta_description": "High-waisted wide-leg trousers with pressed double pleats. Tailored in structured wool crepe.",
+      "created_at": "2026-07-09T13:04:22.274Z"
+    },
+    {
+      "id": "prod_5",
+      "name": "Le Corsage Satin Blouse",
+      "slug": "le-corsage-satin-blouse",
+      "description": "A sculptural, high-neck blouse tailored from fluid silk satin. Features soft gathering at the collar, a concealed back zip, structured shoulders, and elongated cuffs with covered buttons. A timeless balance of tailored structure and soft texture.",
+      "care_instructions": "Dry clean only. Do not wash or spot clean with water. Handle with clean hands to avoid oils.",
+      "price": 890,
+      "category": "Tops",
+      "colors": [
+        "Pearl White",
+        "Noir"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "meta_title": "Le Corsage Silk Satin Blouse - Maison Éther",
+      "meta_description": "Elegant high-neck blouse in premium silk satin. Sculptural gathering and elongated French-style cuffs.",
+      "created_at": "2026-07-09T13:04:22.274Z"
+    },
+    {
+      "id": "prod_6",
+      "name": "Le Smoking Evening Blazer",
+      "slug": "le-smoking-evening-blazer",
+      "description": "A structured, single-breasted blazer in worsted wool crepe, paying homage to classic Parisian tailoring. Featuring custom grosgrain silk satin shawl lapels, a breast pocket, double welt pockets, and structural padded shoulders.",
+      "care_instructions": "Professional dry clean only. Store in a garment cover bag to protect fabric sheen.",
+      "price": 1950,
+      "category": "Outerwear",
+      "colors": [
+        "Charcoal-Black"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1200&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1200&auto=format&fit=crop"
+      ],
+      "meta_title": "Le Smoking Tuxedo Blazer - Maison Éther",
+      "meta_description": "Parisian tailoring redefined. Worsted wool crepe jacket with silk satin shawl lapels and structured fit.",
+      "created_at": "2026-07-09T13:04:22.274Z"
+    },
+    {
+      "id": "prod_1783606437186",
+      "name": "La Robe Silhouette",
+      "slug": "la-robe-silla-robe-silhouettehouette",
+      "description": "A classic silhouette dress crafted with finest silk.",
+      "care_instructions": "Dry clean only.",
+      "price": 2200,
+      "category": "Dresses",
+      "colors": [
+        "Noir",
+        "Emerald"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1595777457583-95e059d581b8"
+      ],
+      "meta_title": "La Robe Silhouette",
+      "meta_description": "",
+      "created_at": "2026-07-09T14:13:57.186Z"
+    }
+  ],
+  "product_variants": [
+    {
+      "id": "prod_1_S",
+      "product_id": "prod_1",
+      "size": "S",
+      "stock": 12
+    },
+    {
+      "id": "prod_1_M",
+      "product_id": "prod_1",
+      "size": "M",
+      "stock": 7
+    },
+    {
+      "id": "prod_1_L",
+      "product_id": "prod_1",
+      "size": "L",
+      "stock": 5
+    },
+    {
+      "id": "prod_1_XL",
+      "product_id": "prod_1",
+      "size": "XL",
+      "stock": 2
+    },
+    {
+      "id": "prod_2_S",
+      "product_id": "prod_2",
+      "size": "S",
+      "stock": 12
+    },
+    {
+      "id": "prod_2_M",
+      "product_id": "prod_2",
+      "size": "M",
+      "stock": 8
+    },
+    {
+      "id": "prod_2_L",
+      "product_id": "prod_2",
+      "size": "L",
+      "stock": 5
+    },
+    {
+      "id": "prod_2_XL",
+      "product_id": "prod_2",
+      "size": "XL",
+      "stock": 2
+    },
+    {
+      "id": "prod_3_S",
+      "product_id": "prod_3",
+      "size": "S",
+      "stock": 12
+    },
+    {
+      "id": "prod_3_M",
+      "product_id": "prod_3",
+      "size": "M",
+      "stock": 8
+    },
+    {
+      "id": "prod_3_L",
+      "product_id": "prod_3",
+      "size": "L",
+      "stock": 5
+    },
+    {
+      "id": "prod_3_XL",
+      "product_id": "prod_3",
+      "size": "XL",
+      "stock": 2
+    },
+    {
+      "id": "prod_4_S",
+      "product_id": "prod_4",
+      "size": "S",
+      "stock": 12
+    },
+    {
+      "id": "prod_4_M",
+      "product_id": "prod_4",
+      "size": "M",
+      "stock": 8
+    },
+    {
+      "id": "prod_4_L",
+      "product_id": "prod_4",
+      "size": "L",
+      "stock": 5
+    },
+    {
+      "id": "prod_4_XL",
+      "product_id": "prod_4",
+      "size": "XL",
+      "stock": 2
+    },
+    {
+      "id": "prod_5_S",
+      "product_id": "prod_5",
+      "size": "S",
+      "stock": 12
+    },
+    {
+      "id": "prod_5_M",
+      "product_id": "prod_5",
+      "size": "M",
+      "stock": 8
+    },
+    {
+      "id": "prod_5_L",
+      "product_id": "prod_5",
+      "size": "L",
+      "stock": 5
+    },
+    {
+      "id": "prod_5_XL",
+      "product_id": "prod_5",
+      "size": "XL",
+      "stock": 2
+    },
+    {
+      "id": "prod_6_S",
+      "product_id": "prod_6",
+      "size": "S",
+      "stock": 12
+    },
+    {
+      "id": "prod_6_M",
+      "product_id": "prod_6",
+      "size": "M",
+      "stock": 8
+    },
+    {
+      "id": "prod_6_L",
+      "product_id": "prod_6",
+      "size": "L",
+      "stock": 5
+    },
+    {
+      "id": "prod_6_XL",
+      "product_id": "prod_6",
+      "size": "XL",
+      "stock": 2
+    },
+    {
+      "id": "prod_1783606437186_S",
+      "product_id": "prod_1783606437186",
+      "size": "S",
+      "stock": 1010
+    },
+    {
+      "id": "prod_1783606437186_M",
+      "product_id": "prod_1783606437186",
+      "size": "M",
+      "stock": 1015
+    },
+    {
+      "id": "prod_1783606437186_L",
+      "product_id": "prod_1783606437186",
+      "size": "L",
+      "stock": 108
+    },
+    {
+      "id": "prod_1783606437186_XL",
+      "product_id": "prod_1783606437186",
+      "size": "XL",
+      "stock": 105
+    }
+  ],
+  "orders": [
+    {
+      "id": "order_1783605570325",
+      "customer_name": "John Doe",
+      "customer_email": "john@example.com",
+      "customer_phone": "+91 9876543210",
+      "shipping_address": "123 Atelier Street",
+      "shipping_city": "Paris",
+      "shipping_zip": "75008",
+      "shipping_country": "France",
+      "total_amount": 1850,
+      "razorpay_order_id": "order_mock_s6plpcq8t",
+      "payment_status": "paid",
+      "order_status": "Pending",
+      "created_at": "2026-07-09T13:59:30.326Z",
+      "razorpay_payment_id": "pay_mock_h9yb5ntry"
+    }
+  ],
+  "order_items": [
+    {
+      "id": "item_c18a4852-5432-47f9-9c4c-42bd03d468ef",
+      "order_id": "order_1783605570325",
+      "product_id": "prod_1",
+      "size": "M",
+      "quantity": 1,
+      "price": 1850
+    }
+  ]
+}

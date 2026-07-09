@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Products | Maison Éther Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">Maison Éther</div>
+      <p style="font-size: 0.65rem; text-align: center; text-transform: uppercase; color: #7e8299; margin-top: -30px; letter-spacing: 0.1em;">Management Console</p>
+      
+      <nav>
+        <ul class="admin-nav">
+          <li><a href="/admin">Dashboard Overview</a></li>
+          <li class="active"><a href="/admin/products">Manage Products</a></li>
+          <li><a href="/admin/orders">Manage Orders</a></li>
+          <li style="margin-top: 50px;"><a href="/admin/logout" style="color: #F87171;">Log Out</a></li>
+        </ul>
+      </nav>
+      
+      <div style="margin-top: auto; text-align: center; font-size: 0.7rem; color: #565674;">
+        Logged in as:<br>
+        <strong style="color: #FFF;"><%= user.email %></strong>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-title">
+          <h2>Garment Exhibition Management</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Create, update, or decommission items from the storefront.</p>
+        </div>
+        <% if (action === 'list') { %>
+          <a href="/admin/products?action=add" class="admin-btn" style="font-size: 0.85rem; padding: 10px 20px;">
+            &plus; Add Couture Piece
+          </a>
+        <% } else { %>
+          <a href="/admin/products" class="admin-btn-secondary" style="font-size: 0.85rem; padding: 10px 20px;">
+            &larr; Back to Listings
+          </a>
+        <% } %>
+      </header>
+
+      <!-- ACTION: LIST PRODUCTS -->
+      <% if (action === 'list') { %>
+        <section class="admin-card">
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Garment Image</th>
+                  <th>Garment Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Sizing Stock Matrix</th>
+                  <th style="text-align: right;">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (products && products.length > 0) { %>
+                  <% products.forEach(prod => { 
+                    // Calculate total stock
+                    const totalStock = prod.variants.reduce((sum, v) => sum + v.stock, 0);
+                  %>
+                    <tr>
+                      <td style="width: 80px;">
+                        <img src="<%= prod.images[0] %>" alt="<%= prod.name %>" style="width: 50px; aspect-ratio: 3/4; object-fit: cover; border-radius: 4px;">
+                      </td>
+                      <td>
+                        <strong><%= prod.name %></strong><br>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">Slug: /products/<%= prod.slug %></span>
+                      </td>
+                      <td><span class="badge badge-info"><%= prod.category %></span></td>
+                      <td>₹<%= parseFloat(prod.price).toLocaleString('en-IN') %></td>
+                      <td>
+                        <div style="display: flex; gap: 8px; font-size: 0.75rem;">
+                          <% prod.variants.forEach(v => { %>
+                            <span style="padding: 2px 6px; border: 1px solid #E5E7EB; border-radius: 4px; background: <%= v.stock === 0 ? '#FEE2E2' : '#FFF' %>;">
+                              <strong><%= v.size %>:</strong> <%= v.stock %>
+                            </span>
+                          <% }) %>
+                        </div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 5px;">Total Stock: <%= totalStock %> items</span>
+                      </td>
+                      <td style="text-align: right;">
+                        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                          <a href="/admin/products?action=edit&id=<%= prod.id %>" class="admin-btn-secondary" style="font-size: 0.75rem; padding: 6px 12px; border-radius: 4px;">
+                            Edit
+                          </a>
+                          <button onclick="deleteProduct('<%= prod.id %>', '<%= prod.name.replace(/'/g, '\\\'') %>')" class="admin-btn-danger" style="font-size: 0.75rem; padding: 6px 12px; border-radius: 4px;">
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px 0;">No products in database.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      <% } %>
+
+      <!-- ACTION: ADD OR EDIT PRODUCT -->
+      <% if (action === 'add' || action === 'edit') { 
+        const isEdit = action === 'edit';
+        const formAction = isEdit ? `/admin/products/edit/${product.id}` : '/admin/products/add';
+        const p = isEdit ? product : { name: '', slug: '', price: '', category: 'Dresses', description: '', care_instructions: '', colors: [], images: [], meta_title: '', meta_description: '' };
+        
+        // Sizing values mapping
+        const getStockVal = (size) => {
+          if (!isEdit) return 10; // default for new
+          const v = product.variants.find(item => item.size === size);
+          return v ? v.stock : 0;
+        };
+      %>
+        <div class="admin-card">
+          <h3><%= isEdit ? `Edit Product: ${p.name}` : 'Exhibit New Couture Piece' %></h3>
+          
+          <form id="admin-product-form" action="<%= formAction %>" method="POST" class="admin-form-grid">
+            <!-- Left Panel: Core Details -->
+            <div style="display: flex; flex-direction: column; gap: 25px;">
+              <div class="form-grid">
+                <div class="input-wrap">
+                  <label for="prod-name">Garment Name *</label>
+                  <input type="text" id="prod-name" name="name" value="<%= p.name %>" required placeholder="e.g. L'Éclipse Evening Dress">
+                </div>
+                <div class="input-wrap">
+                  <label for="prod-slug">SEO URL Slug *</label>
+                  <input type="text" id="prod-slug" name="slug" value="<%= p.slug %>" required placeholder="leclipse-evening-dress">
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <div class="input-wrap">
+                  <label for="prod-price">Retail Price (INR) *</label>
+                  <input type="number" id="prod-price" name="price" value="<%= p.price %>" required step="0.01" min="1" placeholder="e.g. 1850">
+                </div>
+                <div class="input-wrap">
+                  <label for="prod-category">Collection Category *</label>
+                  <select id="prod-category" name="category" required>
+                    <option value="Dresses" <%= p.category === 'Dresses' ? 'selected' : '' %>>Dresses</option>
+                    <option value="Outerwear" <%= p.category === 'Outerwear' ? 'selected' : '' %>>Outerwear</option>
+                    <option value="Knitwear" <%= p.category === 'Knitwear' ? 'selected' : '' %>>Knitwear</option>
+                    <option value="Trousers" <%= p.category === 'Trousers' ? 'selected' : '' %>>Trousers</option>
+                    <option value="Tops" <%= p.category === 'Tops' ? 'selected' : '' %>>Tops</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="input-wrap">
+                <label for="prod-desc">Garment Description *</label>
+                <textarea id="prod-desc" name="description" rows="5" required placeholder="Describe silhouette, drape, fabric feel..."><%= p.description %></textarea>
+              </div>
+
+              <div class="input-wrap">
+                <label for="prod-care">Fabrication & Care Instructions *</label>
+                <textarea id="prod-care" name="care_instructions" rows="3" required placeholder="e.g. Dry clean only. Handle with care..."><%= p.care_instructions %></textarea>
+              </div>
+
+              <!-- SEO Fields -->
+              <h4 style="font-size: 0.85rem; text-transform: uppercase; border-bottom: 1px solid #EFF2F5; padding-bottom: 8px; margin-top: 20px;">SEO Fields</h4>
+              <div class="form-grid">
+                <div class="input-wrap">
+                  <label for="prod-meta-title">Meta Title</label>
+                  <input type="text" id="prod-meta-title" name="meta_title" value="<%= p.meta_title %>" placeholder="Defaults to Garment Name">
+                </div>
+                <div class="input-wrap">
+                  <label for="prod-meta-desc">Meta Description</label>
+                  <input type="text" id="prod-meta-desc" name="meta_description" value="<%= p.meta_description %>" placeholder="Short summary for Google search listings">
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Panel: Sizing & Media uploads -->
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+              <!-- Sizing Stocks -->
+              <div style="border: 1px solid #EFF2F5; padding: 20px; border-radius: 8px;">
+                <h4 style="font-size: 0.85rem; text-transform: uppercase; margin-bottom: 15px;">Sizing Stock Allocations</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                  <div class="input-wrap">
+                    <label for="size-s">Stock - Size S</label>
+                    <input type="number" id="size-s" name="size_S" value="<%= getStockVal('S') %>" min="0" required>
+                  </div>
+                  <div class="input-wrap">
+                    <label for="size-m">Stock - Size M</label>
+                    <input type="number" id="size-m" name="size_M" value="<%= getStockVal('M') %>" min="0" required>
+                  </div>
+                  <div class="input-wrap">
+                    <label for="size-l">Stock - Size L</label>
+                    <input type="number" id="size-l" name="size_L" value="<%= getStockVal('L') %>" min="0" required>
+                  </div>
+                  <div class="input-wrap">
+                    <label for="size-xl">Stock - Size XL</label>
+                    <input type="number" id="size-xl" name="size_XL" value="<%= getStockVal('XL') %>" min="0" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Colors Comma Separated -->
+              <div class="input-wrap">
+                <label for="prod-colors">Colors (Comma separated) *</label>
+                <input type="text" id="prod-colors" name="colors_csv" value="<%= p.colors.join(', ') %>" required placeholder="e.g. Noir, Bone, Taupe">
+              </div>
+
+              <!-- Media uploads & Image URLs -->
+              <div style="border: 1px solid #EFF2F5; padding: 20px; border-radius: 8px;">
+                <h4 style="font-size: 0.85rem; text-transform: uppercase; margin-bottom: 15px;">Garment Photography</h4>
+                
+                <div class="input-wrap" style="margin-bottom: 15px;">
+                  <label>Add Image by URL</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="text" id="prod-image-url" placeholder="https://images.unsplash.com/.../photo" style="flex-grow: 1; padding: 10px;">
+                    <button type="button" id="add-image-url-btn" class="admin-btn-secondary" style="padding: 10px 14px;">Add</button>
+                  </div>
+                </div>
+
+                <div class="input-wrap">
+                  <label for="prod-image-file">Or Upload Image File</label>
+                  <input type="file" id="prod-image-file" accept="image/*" style="border: none; padding: 0;">
+                </div>
+
+                <div class="image-preview-grid" id="prod-images-container">
+                  <!-- Loaded images with hidden inputs to submit -->
+                  <% p.images.forEach(img => { %>
+                    <div class="preview-thumb">
+                      <img src="<%= img %>" alt="Preview">
+                      <button type="button" class="remove-preview-btn" style="position: absolute; top: 5px; right: 5px; background: rgba(239, 68, 68, 0.9); border: none; color: #FFF; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px;">&times;</button>
+                      <input type="hidden" name="product_images[]" value="<%= img %>">
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button type="submit" class="admin-btn" style="flex-grow: 1;">
+                  <%= isEdit ? 'Save Changes' : 'Exhibit Garment' %>
+                </button>
+                <a href="/admin/products" class="admin-btn-secondary" style="text-align: center;">
+                  Cancel
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      <% } %>
+    </main>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main class="container">
+  <div class="centered-message" style="margin-top: 80px; max-width: 700px;">
+    <!-- Confirmation Header -->
+    <h2 style="font-family: var(--font-display); font-size: 2.8rem; margin-bottom: 10px; font-style: italic;">
+      Exquisite Choice
+    </h2>
+    <p style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent-color); margin-bottom: 30px;">
+      Your Couture order is confirmed
+    </p>
+    
+    <p style="font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 40px; text-align: left;">
+      Thank you for your order, <%= order.customer_name %>. Maison Éther is preparing your selected garments. A confirmation slip and tracking code will be dispatched to <strong><%= order.customer_email %></strong> shortly.
+    </p>
+
+    <!-- Invoice Details Box -->
+    <div style="border: 1px solid var(--border-color); padding: 30px; text-align: left; margin-bottom: 40px; font-size: 0.8rem;">
+      <h3 style="font-family: var(--font-display); font-size: 1.1rem; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px;">
+        Order Invoice
+      </h3>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px; line-height: 1.6;">
+        <div>
+          <span style="color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; display: block; letter-spacing: 0.05em;">Order Reference</span>
+          <strong><%= order.id %></strong>
+        </div>
+        <div>
+          <span style="color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; display: block; letter-spacing: 0.05em;">Transaction Date</span>
+          <strong><%= new Date(order.created_at).toLocaleDateString('en-US', { dateStyle: 'long' }) %></strong>
+        </div>
+        <div>
+          <span style="color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; display: block; letter-spacing: 0.05em;">Payment Gateway Status</span>
+          <strong style="color: var(--accent-color); text-transform: uppercase;"><%= order.payment_status %></strong>
+        </div>
+        <div>
+          <span style="color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; display: block; letter-spacing: 0.05em;">Total Amount Paid</span>
+          <strong>₹<%= parseFloat(order.total_amount).toLocaleString('en-IN', { minimumFractionDigits: 2 }) %></strong>
+        </div>
+        <div style="grid-column: span 2;">
+          <span style="color: var(--text-muted); text-transform: uppercase; font-size: 0.65rem; display: block; letter-spacing: 0.05em;">Shipment Destination</span>
+          <strong>
+            <%= order.shipping_address %>, <%= order.shipping_city %>, <%= order.shipping_zip %>, <%= order.shipping_country %>
+          </strong>
+        </div>
+      </div>
+      
+      <div style="margin-top: 30px; border-top: 1px dashed var(--border-color); padding-top: 20px;">
+        <h4 style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;">Selected Items</h4>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
+          <% order.items.forEach(item => { %>
+            <li style="display: flex; justify-content: space-between;">
+              <span><%= item.product_name || 'Couture Piece' %> (<%= item.size %>) &times; <%= item.quantity %></span>
+              <strong>₹<%= (item.price * item.quantity).toLocaleString('en-IN') %></strong>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Dispatch Alert -->
+    <div style="background-color: rgba(0,0,0,0.02); padding: 20px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 40px; border-left: 2px solid var(--accent-color);">
+      Every garment undergoes a final hand-inspection and steam treatment before being packed in our breathable signature linen carrier boxes. Please allow 3 to 5 business days for transit.
+    </div>
+
+    <a href="/shop" class="btn">Continue Collection Exploration</a>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

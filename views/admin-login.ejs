@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maison Éther | Admin Portal Login</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      background-color: #f3f4f6;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Jost', sans-serif;
+    }
+    .login-card {
+      background-color: #FFF;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    .alert-danger {
+      background-color: #FEE2E2;
+      color: #991B1B;
+      padding: 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="login-title">Maison Éther</div>
+    <p style="font-size: 0.75rem; text-align: center; color: #6b7280; margin-top: -15px; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 0.1em;">
+      Administrative Console
+    </p>
+
+    <!-- Error message alert -->
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert-danger">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/admin/login" method="POST" class="form-section" style="gap: 20px;">
+      <div class="input-wrap">
+        <label for="login-email">Email Address</label>
+        <input type="email" id="login-email" name="email" required placeholder="admin@maisonether.com" style="padding: 12px; border-radius: 6px;">
+      </div>
+      
+      <div class="input-wrap">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" name="password" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" style="padding: 12px; border-radius: 6px;">
+      </div>
+
+      <button type="submit" class="btn" style="width: 100%; padding: 15px 0; border-radius: 6px; background-color: #4F46E5; border-color: #4F46E5; color: #FFF;">
+        Log In to Panel
+      </button>
+    </form>
+    
+    <div style="margin-top: 25px; text-align: center;">
+      <a href="/" style="font-size: 0.75rem; color: #6B7280; text-decoration: underline;">Return to storefront</a>
+    </div>
+  </div>
+
+</body>
+</html>

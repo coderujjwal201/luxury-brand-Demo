@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Orders | Maison Éther Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">Maison Éther</div>
+      <p style="font-size: 0.65rem; text-align: center; text-transform: uppercase; color: #7e8299; margin-top: -30px; letter-spacing: 0.1em;">Management Console</p>
+      
+      <nav>
+        <ul class="admin-nav">
+          <li><a href="/admin">Dashboard Overview</a></li>
+          <li><a href="/admin/products">Manage Products</a></li>
+          <li class="active"><a href="/admin/orders">Manage Orders</a></li>
+          <li style="margin-top: 50px;"><a href="/admin/logout" style="color: #F87171;">Log Out</a></li>
+        </ul>
+      </nav>
+      
+      <div style="margin-top: auto; text-align: center; font-size: 0.7rem; color: #565674;">
+        Logged in as:<br>
+        <strong style="color: #FFF;"><%= user.email %></strong>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-title">
+          <h2>Sales & Fulfillment Ledger</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Track customer payments, packaging, and shipping status.</p>
+        </div>
+      </header>
+
+      <section class="admin-card">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date Placed</th>
+                <th>Order ID & Billing Details</th>
+                <th>Purchased Couture Items</th>
+                <th>Total Price</th>
+                <th>Payment Gateway</th>
+                <th>Shipment Dispatch Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (orders && orders.length > 0) { %>
+                <% orders.forEach(ord => { %>
+                  <tr>
+                    <!-- Date -->
+                    <td style="white-space: nowrap; font-size: 0.8rem;">
+                      <%= new Date(ord.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %><br>
+                      <span style="font-size: 0.7rem; color: var(--text-muted);"><%= new Date(ord.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                    </td>
+
+                    <!-- ID & Customer details -->
+                    <td>
+                      <span style="font-family: monospace; font-weight: bold; font-size: 0.8rem; color: var(--accent-color);"><%= ord.id.substring(0, 8) %>...</span><br>
+                      <strong><%= ord.customer_name %></strong><br>
+                      <span style="font-size: 0.75rem; color: var(--text-muted);"><%= ord.customer_email %></span><br>
+                      <span style="font-size: 0.75rem; color: var(--text-muted);"><%= ord.customer_phone %></span>
+                    </td>
+
+                    <!-- Purchased items list -->
+                    <td>
+                      <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.8rem; display: flex; flex-direction: column; gap: 6px;">
+                        <% if (ord.items && ord.items.length > 0) { %>
+                          <% ord.items.forEach(item => { %>
+                            <li style="border-bottom: 1px dashed #EFF2F5; padding-bottom: 4px;">
+                              <strong><%= item.product_name %></strong><br>
+                              <span style="font-size: 0.7rem; color: var(--text-muted);">Size: <%= item.size %> | Qty: <%= item.quantity %> | Rate: ₹<%= parseFloat(item.price).toLocaleString('en-IN') %></span>
+                            </li>
+                          <% }) %>
+                        <% } else { %>
+                          <span style="color: var(--text-muted); font-style: italic;">No items linked.</span>
+                        <% } %>
+                      </ul>
+                    </td>
+
+                    <!-- Total Paid -->
+                    <td style="font-weight: 600;">
+                      ₹<%= parseFloat(ord.total_amount).toLocaleString('en-IN') %>
+                    </td>
+
+                    <!-- Payment gateway verification status -->
+                    <td>
+                      <span class="badge <%= ord.payment_status === 'paid' ? 'badge-success' : 'badge-warning' %>">
+                        <%= ord.payment_status %>
+                      </span>
+                      <% if (ord.razorpay_payment_id) { %>
+                        <span style="display: block; font-family: monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 5px;">
+                          ID: <%= ord.razorpay_payment_id.substring(0, 12) %>...
+                        </span>
+                      <% } %>
+                    </td>
+
+                    <!-- Shipment update selectors -->
+                    <td>
+                      <select class="admin-select-status" data-order-id="<%= ord.id %>" aria-label="Update order shipping status">
+                        <option value="Pending" <%= ord.order_status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                        <option value="Processing" <%= ord.order_status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                        <option value="Shipped" <%= ord.order_status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                        <option value="Delivered" <%= ord.order_status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                      </select>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 40px 0;">No client orders placed yet.</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

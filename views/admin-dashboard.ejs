@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Maison Éther</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-body">
+
+  <div class="admin-wrapper">
+    <!-- Admin Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">Maison Éther</div>
+      <p style="font-size: 0.65rem; text-align: center; text-transform: uppercase; color: #7e8299; margin-top: -30px; letter-spacing: 0.1em;">Management Console</p>
+      
+      <nav>
+        <ul class="admin-nav">
+          <li class="active"><a href="/admin">Dashboard Overview</a></li>
+          <li><a href="/admin/products">Manage Products</a></li>
+          <li><a href="/admin/orders">Manage Orders</a></li>
+          <li style="margin-top: 50px;"><a href="/admin/logout" style="color: #F87171;">Log Out</a></li>
+        </ul>
+      </nav>
+      
+      <div style="margin-top: auto; text-align: center; font-size: 0.7rem; color: #565674;">
+        Logged in as:<br>
+        <strong style="color: #FFF;"><%= user.email %></strong>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="admin-main">
+      <header class="admin-header">
+        <div class="admin-title">
+          <h2>Dashboard Overview</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Real-time business metrics and alert monitors.</p>
+        </div>
+        <a href="/" target="_blank" class="admin-btn-secondary" style="font-size: 0.8rem; padding: 10px 18px;">
+          View Storefront &nearr;
+        </a>
+      </header>
+
+      <!-- Key metrics row -->
+      <section class="admin-metrics">
+        <div class="metric-card">
+          <span class="metric-title">Total Revenue (Paid)</span>
+          <div class="metric-value">₹<%= stats.totalRevenue.toLocaleString('en-IN') %></div>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Garments on Exhibition</span>
+          <div class="metric-value"><%= stats.totalProducts %></div>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">Customer Orders Placed</span>
+          <div class="metric-value"><%= stats.totalOrders %></div>
+        </div>
+      </section>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px;">
+        <!-- Left: Recent Orders -->
+        <section class="admin-card">
+          <h3>Recent Orders</h3>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order Reference</th>
+                  <th>Customer</th>
+                  <th>Total Amount</th>
+                  <th>Payment</th>
+                  <th>Shipment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (stats.recentOrders && stats.recentOrders.length > 0) { %>
+                  <% stats.recentOrders.forEach(ord => { %>
+                    <tr>
+                      <td><a href="/admin/orders" style="color: var(--accent-color); font-weight: 500;"><%= ord.id.substring(0, 8) %>...</a></td>
+                      <td>
+                        <strong><%= ord.customer_name %></strong><br>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);"><%= ord.customer_email %></span>
+                      </td>
+                      <td>₹<%= parseFloat(ord.total_amount).toLocaleString('en-IN') %></td>
+                      <td>
+                        <span class="badge <%= ord.payment_status === 'paid' ? 'badge-success' : 'badge-warning' %>">
+                          <%= ord.payment_status %>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge <%= ord.order_status === 'Delivered' ? 'badge-success' : (ord.order_status === 'Shipped' ? 'badge-info' : 'badge-warning') %>">
+                          <%= ord.order_status %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-muted);">No sales recorded yet.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Right: Sizing Stock Warnings -->
+        <section class="admin-card">
+          <h3>Low-Stock Warnings</h3>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Garment Name</th>
+                  <th>Size</th>
+                  <th>Available Stock</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (stats.lowStockAlerts && stats.lowStockAlerts.length > 0) { %>
+                  <% stats.lowStockAlerts.forEach(alertItem => { %>
+                    <tr>
+                      <td><strong><%= alertItem.product_name %></strong></td>
+                      <td><span class="badge badge-info"><%= alertItem.size %></span></td>
+                      <td style="color: #DC2626; font-weight: bold;"><%= alertItem.stock %> left</td>
+                      <td>
+                        <span class="badge <%= alertItem.stock === 0 ? 'badge-danger' : 'badge-warning' %>">
+                          <%= alertItem.stock === 0 ? 'Out of Stock' : 'Low Stock' %>
+                        </span>
+                      </td>
+                    </tr>
+                  <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="4" style="text-align: center; color: #10B981; font-weight: 500; padding: 25px 0;">All size stocks are fully provisioned (&ge; 5 items).</td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>
