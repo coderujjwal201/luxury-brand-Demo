@@ -35,15 +35,15 @@
   --button-border: #2F4538;
   --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   --vignette-opacity: 0.05;
-  --header-bg: rgba(245, 242, 235, 0.9);
+  --header-bg: rgba(245, 242, 235, 0.75);
   --spotlight-display: none;
   --lookbook-display: flex;
 }
 
 html.theme-evening {
   /* Evening Theme (Dark Mode) */
-  --bg-color: #14201A;             /* Deep Bottle-Green-Black */
-  --bg-alt: #1C2921;               /* Card Surface */
+  --bg-color: #0D0D0D;             /* True deep black */
+  --bg-alt: #161616;               /* Near-black Card Surface */
   --text-color: #EDE6D8;           /* Warm Parchment */
   --text-muted: #9CA69B;
   --accent-color: #A18BA0;         /* Heather (Secondary Accent) */
@@ -59,11 +59,11 @@ html.theme-evening {
   --border-color: rgba(237, 230, 216, 0.15);
   --border-focus: #B08D5C;         /* Focus border uses Aged Brass in dark mode */
   --button-bg: #B08D5C;            /* Aged Brass is primary button in dark mode */
-  --button-text: #14201A;
+  --button-text: #0D0D0D;          /* Match deep black */
   --button-border: #B08D5C;
-  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
   --vignette-opacity: 0.25;
-  --header-bg: rgba(20, 32, 26, 0.9);
+  --header-bg: rgba(13, 13, 13, 0.70); /* Frosted glass true black background */
   --spotlight-display: block;
   --lookbook-display: none;
 }
@@ -167,7 +167,8 @@ header {
   top: 0;
   z-index: 100;
   background-color: var(--header-bg);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.6s ease, border-color 0.6s ease;
 }
@@ -288,7 +289,7 @@ header {
   transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease;
 }
 
-body.theme-dark-atelier .theme-toggle-knob {
+html.theme-evening .theme-toggle-knob {
   transform: translateX(20px);
 }
 
@@ -506,11 +507,11 @@ body.theme-dark-atelier .theme-toggle-knob {
 }
 
 /* Asymmetric styles under Quiet Luxury */
-body:not(.theme-dark-atelier) .product-grid .product-card:nth-child(3n+2) {
+html:not(.theme-evening) .product-grid .product-card:nth-child(3n+2) {
   margin-top: 40px;
 }
 
-body:not(.theme-dark-atelier) .product-grid .product-card:nth-child(3n) {
+html:not(.theme-evening) .product-grid .product-card:nth-child(3n) {
   margin-top: -20px;
 }
 
@@ -518,11 +519,19 @@ body:not(.theme-dark-atelier) .product-grid .product-card:nth-child(3n) {
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.4s ease;
+  background-color: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
 }
 
 .product-image-wrap {
@@ -545,7 +554,7 @@ body:not(.theme-dark-atelier) .product-grid .product-card:nth-child(3n) {
 }
 
 /* Vignette treatment for Dark Atelier */
-body.theme-dark-atelier .product-image-wrap::after {
+html.theme-evening .product-image-wrap::after {
   content: '';
   position: absolute;
   top: 0;
@@ -691,7 +700,7 @@ body.theme-dark-atelier .product-image-wrap::after {
   margin-bottom: -80px;
 }
 
-body.theme-dark-atelier .newsletter-section {
+html.theme-evening .newsletter-section {
   background-color: rgba(255, 255, 255, 0.02);
 }
 
@@ -796,7 +805,7 @@ footer {
   border-top: 1px solid rgba(0,0,0,0.05);
 }
 
-body.theme-dark-atelier .footer-bottom {
+html.theme-evening .footer-bottom {
   border-top-color: rgba(255,255,255,0.05);
 }
 
@@ -815,6 +824,13 @@ body.theme-dark-atelier .footer-bottom {
   display: flex;
   flex-direction: column;
   gap: 35px;
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
 }
 
 .filter-group h4 {
@@ -1002,6 +1018,8 @@ body.theme-dark-atelier .footer-bottom {
   opacity: 0.25;
   cursor: not-allowed;
   position: relative;
+  pointer-events: none;
+  text-decoration: line-through;
 }
 
 .size-option-btn:disabled::after {
@@ -1298,7 +1316,7 @@ body.theme-dark-atelier .footer-bottom {
   height: fit-content;
 }
 
-body.theme-dark-atelier .checkout-summary {
+html.theme-evening .checkout-summary {
   background-color: rgba(255,255,255,0.01);
 }
 
@@ -1618,8 +1636,8 @@ body.theme-dark-atelier .checkout-summary {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  body:not(.theme-dark-atelier) .product-grid .product-card:nth-child(3n+2),
-  body:not(.theme-dark-atelier) .product-grid .product-card:nth-child(3n) {
+  html:not(.theme-evening) .product-grid .product-card:nth-child(3n+2),
+  html:not(.theme-evening) .product-grid .product-card:nth-child(3n) {
     margin-top: 0;
   }
   
@@ -1749,6 +1767,37 @@ body.theme-dark-atelier .checkout-summary {
 select option {
   background-color: var(--bg-color);
   color: var(--text-color);
+}
+
+/* Scroll-reveal entrance animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(25px);
+  transition: opacity 1.0s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 1.0s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Homepage hero content load animations */
+.lookbook-overlay h2, .lookbook-overlay p, .lookbook-overlay .btn,
+.spotlight-text-overlay h2, .spotlight-text-overlay p {
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInUp 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.lookbook-overlay p, .spotlight-text-overlay p:first-child {
+  animation-delay: 0.2s;
+}
+.lookbook-overlay h2, .spotlight-text-overlay h2 {
+  animation-delay: 0.5s;
+}
+.lookbook-overlay .btn, .spotlight-text-overlay p:last-child {
+  animation-delay: 0.8s;
 }
 
 /* Accessibility: Respect user motion preferences */

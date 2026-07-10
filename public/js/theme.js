@@ -8,22 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeSpotlight();
   initializeProductAccordions();
   initializeMobileMenu();
+  initializeScrollReveal();
 });
 
 /**
  * Theme Toggle & Persistence on HTML root
  */
 function initializeTheme() {
-  const toggleBtn = document.getElementById('theme-toggle');
-  if (!toggleBtn) return;
-
   // Retrieve theme preference or default to daylight
   const currentTheme = localStorage.getItem('thistlewood_theme') || 'daylight';
   
   const scroller = document.querySelector('.lookbook-scroller-container');
   const spotlight = document.querySelector('.spotlight-hero-container');
   
-  // Set initial element visibility based on stored preference
+  // Set initial element visibility and classes based on stored preference
   if (currentTheme === 'evening') {
     document.documentElement.classList.add('theme-evening');
     if (scroller) scroller.parentElement.style.display = 'none';
@@ -33,6 +31,9 @@ function initializeTheme() {
     if (scroller) scroller.parentElement.style.display = 'flex';
     if (spotlight) spotlight.style.display = 'none';
   }
+
+  const toggleBtn = document.getElementById('theme-toggle');
+  if (!toggleBtn) return;
 
   // Handle switch click event
   toggleBtn.addEventListener('click', () => {
@@ -217,4 +218,35 @@ function initializeMobileMenu() {
       toggle.innerHTML = '&times;'; // Cross character
     }
   });
+}
+
+/**
+ * Scroll-reveal Intersection Observer for entering sections
+ */
+function initializeScrollReveal() {
+  // Respect prefers-reduced-motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  const reveals = document.querySelectorAll('.scroll-reveal');
+  if (reveals.length === 0) return;
+
+  if (prefersReducedMotion) {
+    // Reveal all elements immediately
+    reveals.forEach(el => el.classList.add('revealed'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target); // trigger animation once
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  reveals.forEach(el => observer.observe(el));
 }

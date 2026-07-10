@@ -11,8 +11,14 @@
   <div class="admin-wrapper">
     <!-- Sidebar Navigation -->
     <aside class="admin-sidebar">
-      <div class="admin-brand">Thistlewood</div>
-      <p style="font-size: 0.65rem; text-align: center; text-transform: uppercase; color: #7e8299; margin-top: -30px; letter-spacing: 0.1em;">Management Console</p>
+      <div class="admin-brand" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding-bottom: 20px;">
+        <svg viewBox="0 0 100 100" width="24" height="24" fill="currentColor" style="display: inline-block;">
+          <!-- Geometric thistle icon matching brand specifications -->
+          <path fill-rule="evenodd" d="M50 88 L63 75 L50 62 L37 75 Z M50 80 L43 73 L50 66 L57 73 Z M32 70 L45 57 L49 61 L36 74 Z M68 70 L55 57 L51 61 L64 74 Z M27 65 L40 52 L44 56 L31 69 Z M73 65 L60 52 L56 56 L69 69 Z M47.5 48 L47.5 15 L52.5 15 L52.5 48 Z M39 48 L32 18 L37 18 L44 48 Z M61 48 L68 18 L63 18 L56 48 Z M30.5 48 L12 24 L17 24 L35.5 48 Z M69.5 48 L88 24 L83 24 L64.5 48 Z" />
+        </svg>
+        <span style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">Thistlewood</span>
+      </div>
+      <p style="font-size: 0.65rem; text-align: center; text-transform: uppercase; color: #7e8299; margin-top: -30px; letter-spacing: 0.1em; margin-bottom: 10px;">Management Console</p>
       
       <nav>
         <ul class="admin-nav">
@@ -184,26 +190,44 @@
 
             <!-- Right Panel: Sizing & Media uploads -->
             <div style="display: flex; flex-direction: column; gap: 30px;">
-              <!-- Sizing Stocks -->
+              <!-- Sizing Stocks (Dynamic size+stock pairs) -->
               <div style="border: 1px solid #EFF2F5; padding: 20px; border-radius: 8px;">
-                <h4 style="font-size: 0.85rem; text-transform: uppercase; margin-bottom: 15px;">Sizing Stock Allocations</h4>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-                  <div class="input-wrap">
-                    <label for="size-s">Stock - Size S</label>
-                    <input type="number" id="size-s" name="size_S" value="<%= getStockVal('S') %>" min="0" required>
-                  </div>
-                  <div class="input-wrap">
-                    <label for="size-m">Stock - Size M</label>
-                    <input type="number" id="size-m" name="size_M" value="<%= getStockVal('M') %>" min="0" required>
-                  </div>
-                  <div class="input-wrap">
-                    <label for="size-l">Stock - Size L</label>
-                    <input type="number" id="size-l" name="size_L" value="<%= getStockVal('L') %>" min="0" required>
-                  </div>
-                  <div class="input-wrap">
-                    <label for="size-xl">Stock - Size XL</label>
-                    <input type="number" id="size-xl" name="size_XL" value="<%= getStockVal('XL') %>" min="0" required>
-                  </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                  <h4 style="font-size: 0.85rem; text-transform: uppercase; margin: 0;">Sizing Stock Allocations</h4>
+                  <button type="button" id="add-size-btn" class="admin-btn-secondary" style="font-size: 0.75rem; padding: 6px 12px; border-radius: 4px; border-color: var(--border-color); cursor: pointer;">&plus; Add Size</button>
+                </div>
+                <div id="sizes-container" style="display: flex; flex-direction: column; gap: 10px;">
+                  <% if (isEdit && product.variants && product.variants.length > 0) { %>
+                    <% product.variants.forEach((v, index) => { %>
+                      <div class="size-row" style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" name="sizes[]" value="<%= v.size %>" placeholder="e.g. S, M, XL, 38" required style="flex: 2; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                        <input type="number" name="stocks[]" value="<%= v.stock %>" min="0" placeholder="Stock" required style="flex: 1; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                        <button type="button" class="remove-size-btn admin-btn-danger" style="padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; border: none; cursor: pointer;">&times;</button>
+                      </div>
+                    <% }) %>
+                  <% } else { %>
+                    <!-- Defaults for a new garment -->
+                    <div class="size-row" style="display: flex; gap: 10px; align-items: center;">
+                      <input type="text" name="sizes[]" value="S" placeholder="Size" required style="flex: 2; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <input type="number" name="stocks[]" value="10" min="0" placeholder="Stock" required style="flex: 1; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <button type="button" class="remove-size-btn admin-btn-danger" style="padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; border: none; cursor: pointer;">&times;</button>
+                    </div>
+                    <div class="size-row" style="display: flex; gap: 10px; align-items: center;">
+                      <input type="text" name="sizes[]" value="M" placeholder="Size" required style="flex: 2; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <input type="number" name="stocks[]" value="10" min="0" placeholder="Stock" required style="flex: 1; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <button type="button" class="remove-size-btn admin-btn-danger" style="padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; border: none; cursor: pointer;">&times;</button>
+                    </div>
+                    <div class="size-row" style="display: flex; gap: 10px; align-items: center;">
+                      <input type="text" name="sizes[]" value="L" placeholder="Size" required style="flex: 2; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <input type="number" name="stocks[]" value="10" min="0" placeholder="Stock" required style="flex: 1; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <button type="button" class="remove-size-btn admin-btn-danger" style="padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; border: none; cursor: pointer;">&times;</button>
+                    </div>
+                    <div class="size-row" style="display: flex; gap: 10px; align-items: center;">
+                      <input type="text" name="sizes[]" value="XL" placeholder="Size" required style="flex: 2; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <input type="number" name="stocks[]" value="10" min="0" placeholder="Stock" required style="flex: 1; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+                      <button type="button" class="remove-size-btn admin-btn-danger" style="padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; border: none; cursor: pointer;">&times;</button>
+                    </div>
+                  <% } %>
                 </div>
               </div>
 

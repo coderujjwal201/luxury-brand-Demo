@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupVariantStockSync();
   setupOrderActions();
   setupImageUploader();
+  setupCustomSizes();
 });
 
 /**
@@ -179,4 +180,37 @@ async function deleteProduct(productId, productName) {
   } catch (err) {
     alert('Server delete API error.');
   }
+}
+
+/**
+ * Handle custom dynamic size allocations row addition & deletion
+ */
+function setupCustomSizes() {
+  const container = document.getElementById('sizes-container');
+  const addBtn = document.getElementById('add-size-btn');
+  if (!container || !addBtn) return;
+
+  addBtn.addEventListener('click', () => {
+    const row = document.createElement('div');
+    row.classList.add('size-row');
+    row.style.display = 'flex';
+    row.style.gap = '10px';
+    row.style.alignItems = 'center';
+    row.innerHTML = `
+      <input type="text" name="sizes[]" placeholder="e.g. S, M, XL, 38" required style="flex: 2; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+      <input type="number" name="stocks[]" value="10" min="0" placeholder="Stock" required style="flex: 1; padding: 8px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color);">
+      <button type="button" class="remove-size-btn admin-btn-danger" style="padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; border: none; cursor: pointer;">&times;</button>
+    `;
+    container.appendChild(row);
+  });
+
+  container.addEventListener('click', (e) => {
+    if (e.target.classList.contains('remove-size-btn') || e.target.parentElement.classList.contains('remove-size-btn')) {
+      const btn = e.target.classList.contains('remove-size-btn') ? e.target : e.target.parentElement;
+      const row = btn.closest('.size-row');
+      if (row) {
+        row.remove();
+      }
+    }
+  });
 }

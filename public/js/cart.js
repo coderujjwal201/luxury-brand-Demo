@@ -23,6 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (addToCartBtn) {
     addToCartBtn.addEventListener('click', handleAddToCart);
   }
+
+  // Bind dynamic grid Add to Bag buttons using event delegation
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('grid-add-btn')) {
+      handleGridAddToCart(e);
+    }
+  });
 });
 
 /**
@@ -463,4 +470,62 @@ function launchSimulatedPayment(orderId, amount, customerInfo, localOrderId, sub
     submitBtn.textContent = btnText;
     submitBtn.disabled = false;
   });
+}
+
+/**
+ * Handle Add to Cart action on shop grid cards
+ */
+function handleGridAddToCart(e) {
+  const btn = e.target;
+  const productId = btn.getAttribute('data-id');
+  const productName = btn.getAttribute('data-name');
+  const productPrice = parseFloat(btn.getAttribute('data-price'));
+  const productImage = btn.getAttribute('data-image');
+  const productSlug = btn.getAttribute('data-slug');
+  
+  // Find adjacent size selector within the product card
+  const sizeSelect = btn.parentElement.querySelector('.grid-size-select');
+  if (!sizeSelect) {
+    alert('Size selection not found.');
+    return;
+  }
+  const selectedSize = sizeSelect.value;
+  if (!selectedSize) {
+    alert('Please select a size first.');
+    return;
+  }
+
+  // Check if item already exists with this size
+  const existingIndex = cart.findIndex(item => item.id === productId && item.size === selectedSize);
+  
+  if (existingIndex > -1) {
+    cart[existingIndex].quantity += 1;
+  } else {
+    cart.push({
+      id: productId,
+      name: productName,
+      price: productPrice,
+      image: productImage,
+      slug: productSlug,
+      size: selectedSize,
+      quantity: 1
+    });
+  }
+  
+  saveCart();
+  updateCartBubble();
+  
+  // Mini micro-interaction on button
+  const originalText = btn.textContent;
+  btn.textContent = 'ADDED';
+  btn.style.backgroundColor = 'var(--accent-color)';
+  btn.style.borderColor = 'var(--accent-color)';
+  btn.style.color = '#FFF';
+  
+  setTimeout(() => {
+    btn.textContent = originalText;
+    btn.style.backgroundColor = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }, 2000);
 }

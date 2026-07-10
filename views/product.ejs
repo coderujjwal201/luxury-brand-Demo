@@ -10,7 +10,7 @@
   </div>
 
   <!-- Product details layout grid -->
-  <div class="product-detail-grid">
+  <div class="product-detail-grid scroll-reveal">
     <!-- Left Column: Gallery -->
     <div class="product-gallery">
       <div class="gallery-main-wrap">
@@ -58,10 +58,10 @@
         </h4>
         <div class="size-selector-wrap">
           <% 
-            const sizes = ['S', 'M', 'L', 'XL'];
-            sizes.forEach(sz => {
-              const variant = product.variants.find(v => v.size === sz);
-              const stock = variant ? variant.stock : 0;
+            if (product.variants && product.variants.length > 0) {
+              product.variants.forEach(variant => {
+                const sz = variant.size;
+                const stock = variant.stock;
           %>
             <button class="size-option-btn" 
                     data-size="<%= sz %>" 
@@ -70,7 +70,12 @@
                     aria-label="Size <%= sz %>, <%= stock > 0 ? stock + ' left' : 'Out of stock' %>">
               <%= sz %>
             </button>
-          <% }) %>
+          <% 
+              });
+            } else { 
+          %>
+            <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">No sizes currently allocated.</p>
+          <% } %>
         </div>
       </div>
 
@@ -125,7 +130,7 @@
   </div>
 
   <!-- Related Products / Sartorial suggestions -->
-  <section style="margin-top: 120px;">
+  <section style="margin-top: 120px;" class="scroll-reveal">
     <h2 class="section-title">L'Accompagnement</h2>
     <div class="product-grid">
       <% if (relatedProducts && relatedProducts.length > 0) { %>

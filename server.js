@@ -399,7 +399,7 @@ app.get('/admin/products', async (req, res) => {
 // POST Add product
 app.post('/admin/products/add', async (req, res) => {
   try {
-    const { name, slug, price, category, description, care_instructions, colors_csv, product_images, size_S, size_M, size_L, size_XL, meta_title, meta_description } = req.body;
+    const { name, slug, price, category, description, care_instructions, colors_csv, product_images, meta_title, meta_description } = req.body;
     
     const colors = colors_csv.split(',').map(c => c.trim()).filter(Boolean);
     // Ensure we have at least one image, or fall back to default
@@ -409,12 +409,22 @@ app.post('/admin/products/add', async (req, res) => {
       name, slug, price, category, description, care_instructions, colors, images, meta_title, meta_description
     };
 
-    const variantsData = {
-      S: parseInt(size_S) || 0,
-      M: parseInt(size_M) || 0,
-      L: parseInt(size_L) || 0,
-      XL: parseInt(size_XL) || 0
-    };
+    const variantsData = {};
+    if (req.body.sizes) {
+      if (Array.isArray(req.body.sizes)) {
+        req.body.sizes.forEach((sz, idx) => {
+          const trimmed = sz.trim();
+          if (trimmed) {
+            variantsData[trimmed] = Math.max(0, parseInt(req.body.stocks[idx]) || 0);
+          }
+        });
+      } else if (typeof req.body.sizes === 'string') {
+        const trimmed = req.body.sizes.trim();
+        if (trimmed) {
+          variantsData[trimmed] = Math.max(0, parseInt(req.body.stocks) || 0);
+        }
+      }
+    }
 
     await db.createProduct(productData, variantsData);
     res.redirect('/admin/products');
@@ -427,7 +437,7 @@ app.post('/admin/products/add', async (req, res) => {
 // POST Edit product
 app.post('/admin/products/edit/:id', async (req, res) => {
   try {
-    const { name, slug, price, category, description, care_instructions, colors_csv, product_images, size_S, size_M, size_L, size_XL, meta_title, meta_description } = req.body;
+    const { name, slug, price, category, description, care_instructions, colors_csv, product_images, meta_title, meta_description } = req.body;
     
     const colors = colors_csv.split(',').map(c => c.trim()).filter(Boolean);
     const images = Array.isArray(product_images) ? product_images : (product_images ? [product_images] : ['https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800']);
@@ -436,12 +446,22 @@ app.post('/admin/products/edit/:id', async (req, res) => {
       name, slug, price, category, description, care_instructions, colors, images, meta_title, meta_description
     };
 
-    const variantsData = {
-      S: parseInt(size_S) || 0,
-      M: parseInt(size_M) || 0,
-      L: parseInt(size_L) || 0,
-      XL: parseInt(size_XL) || 0
-    };
+    const variantsData = {};
+    if (req.body.sizes) {
+      if (Array.isArray(req.body.sizes)) {
+        req.body.sizes.forEach((sz, idx) => {
+          const trimmed = sz.trim();
+          if (trimmed) {
+            variantsData[trimmed] = Math.max(0, parseInt(req.body.stocks[idx]) || 0);
+          }
+        });
+      } else if (typeof req.body.sizes === 'string') {
+        const trimmed = req.body.sizes.trim();
+        if (trimmed) {
+          variantsData[trimmed] = Math.max(0, parseInt(req.body.stocks) || 0);
+        }
+      }
+    }
 
     await db.updateProduct(req.params.id, productData, variantsData);
     res.redirect('/admin/products');
@@ -493,38 +513,47 @@ app.post('/api/admin/upload-image', adminAuth, upload.single('image'), async (re
   }
 
   const useSupabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (useSupabase) {
-    try {
-      const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-      const fileBuffer = fs.readFileSync(req.file.path);
-      const fileName = `${Date.now()}-${req.file.originalname}`;
-      
-      const { data, error } = await supabaseAdmin.storage
-        .from('product-images')
-        .upload(fileName, fileBuffer, {
-          contentType: req.file.mimetype,
-          upsert: true
-        });
-
-      if (error) throw error;
-
-      const { data: { publicUrl } } = supabaseAdmin.storage
-        .from('product-images')
-        .getPublicUrl(fileName);
-
-      // Clean up the local temp file to keep disk clean on ephemeral/Render instances
+  if (!useSupabase) {
+    // Clean up local temp file to avoid orphan files
+    if (fs.existsSync(req.file.path)) {
       fs.unlinkSync(req.file.path);
-
-      return res.json({ success: true, url: publicUrl });
-    } catch (err) {
-      console.error('Supabase Storage Upload Error, falling back to disk:', err);
-      const fileUrl = `/uploads/${req.file.filename}`;
-      return res.json({ success: true, url: fileUrl, warning: 'Uploaded locally due to cloud storage failure.' });
     }
-  } else {
-    // Local fallback
-    const fileUrl = `/uploads/${req.file.filename}`;
-    res.json({ success: true, url: fileUrl });
+    return res.status(400).json({ success: false, message: 'Supabase Storage is not configured on the server. Persistent image uploads require a configured Supabase instance.' });
+  }
+
+  try {
+    const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const fileBuffer = fs.readFileSync(req.file.path);
+    const fileName = `${Date.now()}-${req.file.originalname}`;
+    
+    const { data, error } = await supabaseAdmin.storage
+      .from('product-images')
+      .upload(fileName, fileBuffer, {
+        contentType: req.file.mimetype,
+        upsert: true
+      });
+
+    // Clean up local temp file
+    if (fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    if (error) throw error;
+
+    const { data: { publicUrl } } = supabaseAdmin.storage
+      .from('product-images')
+      .getPublicUrl(fileName);
+
+    return res.json({ success: true, url: publicUrl });
+  } catch (err) {
+    console.error('Supabase Storage Upload Error:', err);
+    // Cleanup if upload failed
+    if (fs.existsSync(req.file.path)) {
+      try {
+        fs.unlinkSync(req.file.path);
+      } catch (_) {}
+    }
+    return res.status(500).json({ success: false, message: 'Supabase Storage Upload Failed: ' + err.message });
   }
 });
 
