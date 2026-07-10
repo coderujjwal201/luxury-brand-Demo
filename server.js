@@ -334,7 +334,7 @@ app.use('/admin', (req, res, next) => {
 // GET Login
 app.get('/admin/login', (req, res) => {
   const token = req.cookies.admin_session;
-  if (token === process.env.SESSION_SECRET) return res.redirect('/admin');
+if (token && process.env.SESSION_SECRET && token === process.env.SESSION_SECRET) return res.redirect('/admin');
   res.render('admin-login', { error: null });
 });
 
