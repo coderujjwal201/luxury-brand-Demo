@@ -1,5 +1,5 @@
 /**
- * Maison Éther - Theme Switching & Interactive UI Animations
+ * Thistlewood - Theme Switching & Interactive UI Animations
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,31 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Theme Toggle & Persistence
+ * Theme Toggle & Persistence on HTML root
  */
 function initializeTheme() {
   const toggleBtn = document.getElementById('theme-toggle');
   if (!toggleBtn) return;
 
-  // Retrieve theme preference or default to quiet-luxury
-  const currentTheme = localStorage.getItem('maison_ether_theme') || 'quiet-luxury';
+  // Retrieve theme preference or default to daylight
+  const currentTheme = localStorage.getItem('thistlewood_theme') || 'daylight';
   
-  if (currentTheme === 'dark-atelier') {
-    document.body.classList.add('theme-dark-atelier');
+  const scroller = document.querySelector('.lookbook-scroller-container');
+  const spotlight = document.querySelector('.spotlight-hero-container');
+  
+  // Set initial element visibility based on stored preference
+  if (currentTheme === 'evening') {
+    document.documentElement.classList.add('theme-evening');
+    if (scroller) scroller.parentElement.style.display = 'none';
+    if (spotlight) spotlight.style.display = 'block';
   } else {
-    document.body.classList.remove('theme-dark-atelier');
+    document.documentElement.classList.remove('theme-evening');
+    if (scroller) scroller.parentElement.style.display = 'flex';
+    if (spotlight) spotlight.style.display = 'none';
   }
 
   // Handle switch click event
   toggleBtn.addEventListener('click', () => {
-    const isDark = document.body.classList.toggle('theme-dark-atelier');
-    localStorage.setItem('maison_ether_theme', isDark ? 'dark-atelier' : 'quiet-luxury');
+    const isEvening = document.documentElement.classList.toggle('theme-evening');
+    localStorage.setItem('thistlewood_theme', isEvening ? 'evening' : 'daylight');
     
-    // Rerender layout updates or elements if on index page
-    const scroller = document.querySelector('.lookbook-scroller-container');
-    const spotlight = document.querySelector('.spotlight-hero-container');
-    
-    if (isDark) {
+    if (isEvening) {
       if (scroller) scroller.parentElement.style.display = 'none';
       if (spotlight) spotlight.style.display = 'block';
     } else {
@@ -46,12 +50,19 @@ function initializeTheme() {
 }
 
 /**
- * Option A Lookbook Scroller Slides & Indicators
+ * Option A Lookbook Scroller Slides & Indicators (Continuous Forward Loop)
  */
 function initializeLookbook() {
   const container = document.querySelector('.lookbook-scroller-container');
   const dots = document.querySelectorAll('.indicator-dot');
   if (!container || dots.length === 0) return;
+
+  // Clone first slide and append it at the end to support seamless wrapping
+  const slides = container.querySelectorAll('.lookbook-slide');
+  if (slides.length > 0) {
+    const firstClone = slides[0].cloneNode(true);
+    container.appendChild(firstClone);
+  }
 
   // Update indicators based on scroll position
   container.addEventListener('scroll', () => {
@@ -60,7 +71,8 @@ function initializeLookbook() {
     const activeIndex = Math.round(scrollLeft / width);
 
     dots.forEach((dot, idx) => {
-      if (idx === activeIndex) {
+      // Wrap index so index 3 (clone) lights up indicator 0 (first slide)
+      if (idx === (activeIndex % 3)) {
         dot.classList.add('active');
       } else {
         dot.classList.remove('active');
@@ -79,18 +91,23 @@ function initializeLookbook() {
     });
   });
 
-  // Autoplay slow loop lookbook slider (Theme A only)
-  let autoPlayInterval = setInterval(autoSlide, 6500);
+  // Autoplay slow loop lookbook slider (Daylight only)
+  let autoPlayInterval = setInterval(autoSlide, 5000);
 
   function autoSlide() {
-    if (document.body.classList.contains('theme-dark-atelier')) return; // No auto-slide if dark atelier is active
+    if (document.documentElement.classList.contains('theme-evening')) return; // No auto-slide if evening is active
     
     const width = container.clientWidth;
     const scrollLeft = container.scrollLeft;
     const maxScroll = container.scrollWidth - width;
     
-    if (scrollLeft >= maxScroll - 10) {
-      container.scrollTo({ left: 0, behavior: 'smooth' });
+    // We are at index 2 (slide 3) and about to scroll to index 3 (clone of slide 1)
+    if (scrollLeft >= (maxScroll - width - 10)) {
+      container.scrollTo({ left: maxScroll, behavior: 'smooth' });
+      // Once transition finishes, silently snap back to index 0
+      setTimeout(() => {
+        container.scrollTo({ left: 0, behavior: 'auto' });
+      }, 700);
     } else {
       container.scrollBy({ left: width, behavior: 'smooth' });
     }
@@ -106,33 +123,51 @@ function initializeLookbook() {
  */
 function initializeSpotlight() {
   const container = document.querySelector('.spotlight-hero-container');
-  if (!container) return;
+  const lens = document.querySelector('.spotlight-lens');
+  if (!container || !lens) return;
 
-  // Mousemove coordinates mapping
+  // Respect prefers-reduced-motion: if active, show static image and skip movement hooks
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    lens.style.opacity = 1;
+    lens.style.webkitMaskImage = 'none';
+    lens.style.maskImage = 'none';
+    return;
+  }
+
+  // Track coordinates in real time
   container.addEventListener('mousemove', (e) => {
-    if (!document.body.classList.contains('theme-dark-atelier')) return;
+    if (!document.documentElement.classList.contains('theme-evening')) return;
 
     const rect = container.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    container.style.setProperty('--mouse-x', `${x}%`);
-    container.style.setProperty('--mouse-y', `${y}%`);
+    container.style.setProperty('--mouse-x', `${x}px`);
+    container.style.setProperty('--mouse-y', `${y}px`);
+    lens.style.opacity = 1;
   });
 
-  // Handle Touch devices by center pulsing spotlight in key spots or tracking finger
+  // Touch support for mobile devices
   container.addEventListener('touchmove', (e) => {
-    if (!document.body.classList.contains('theme-dark-atelier')) return;
+    if (!document.documentElement.classList.contains('theme-evening')) return;
     if (e.touches.length === 0) return;
 
     const touch = e.touches[0];
     const rect = container.getBoundingClientRect();
-    const x = ((touch.clientX - rect.left) / rect.width) * 100;
-    const y = ((touch.clientY - rect.top) / rect.height) * 100;
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
 
-    container.style.setProperty('--mouse-x', `${x}%`);
-    container.style.setProperty('--mouse-y', `${y}%`);
+    container.style.setProperty('--mouse-x', `${x}px`);
+    container.style.setProperty('--mouse-y', `${y}px`);
+    lens.style.opacity = 1;
   }, { passive: true });
+
+  // Disappear when mouse leaves
+  container.addEventListener('mouseleave', () => {
+    if (prefersReducedMotion) return;
+    lens.style.opacity = 0;
+  });
 }
 
 /**

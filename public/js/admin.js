@@ -1,5 +1,5 @@
 /**
- * Maison Éther - Admin Panel Frontend Controllers
+ * Thistlewood - Admin Panel Frontend Controllers
  */
 
 document.addEventListener('DOMContentLoaded', () => {

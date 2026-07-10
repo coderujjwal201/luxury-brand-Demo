@@ -1,4 +1,4 @@
--- Maison Éther Database Schema
+-- Thistlewood Database Schema
 -- Run this in your Supabase SQL Editor to set up tables.
 
 -- Drop tables if they exist (for reset purposes)

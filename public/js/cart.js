@@ -1,9 +1,9 @@
 /**
- * Maison Éther - Client-Side Cart & Razorpay Checkout Integration
+ * Thistlewood - Client-Side Cart & Razorpay Checkout Integration
  */
 
 // Global cart state initialized from LocalStorage
-let cart = JSON.parse(localStorage.getItem('maison_ether_cart')) || [];
+let cart = JSON.parse(localStorage.getItem('thistlewood_cart')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
   updateCartBubble();
@@ -91,7 +91,7 @@ function handleAddToCart(e) {
 }
 
 function saveCart() {
-  localStorage.setItem('maison_ether_cart', JSON.stringify(cart));
+  localStorage.setItem('thistlewood_cart', JSON.stringify(cart));
 }
 
 /**
@@ -299,12 +299,15 @@ function launchRealRazorpay(orderId, amount, key, customerInfo, localOrderId, su
     return;
   }
 
+  const isEvening = document.documentElement.classList.contains('theme-evening');
+  const accentColor = isEvening ? '#B08D5C' : '#2F4538';
+
   const options = {
     key: key,
     amount: amount,
     currency: 'INR',
-    name: 'Maison Éther',
-    description: `Couture Order ${localOrderId}`,
+    name: 'Thistlewood',
+    description: `Order ${localOrderId}`,
     order_id: orderId,
     handler: async function (response) {
       // Payment successful callback
@@ -322,7 +325,7 @@ function launchRealRazorpay(orderId, amount, key, customerInfo, localOrderId, su
         const verifyResult = await verifyRes.json();
         if (verifyRes.ok && verifyResult.success) {
           // Clear Cart and redirect
-          localStorage.removeItem('maison_ether_cart');
+          localStorage.removeItem('thistlewood_cart');
           cart = [];
           window.location.href = `/order-confirmation?order_id=${verifyResult.order_id}`;
         } else {
@@ -342,7 +345,7 @@ function launchRealRazorpay(orderId, amount, key, customerInfo, localOrderId, su
       contact: customerInfo.customer_phone
     },
     theme: {
-      color: document.body.classList.contains('theme-dark-atelier') ? '#A8703F' : '#B08D57'
+      color: accentColor
     },
     modal: {
       ondismiss: function () {
@@ -376,8 +379,8 @@ function launchSimulatedPayment(orderId, amount, customerInfo, localOrderId, sub
   overlay.style.backdropFilter = 'blur(10px)';
 
   const card = document.createElement('div');
-  card.style.backgroundColor = 'var(--bg-color, #F7F5F0)';
-  card.style.color = 'var(--text-color, #1A1815)';
+  card.style.backgroundColor = 'var(--bg-color, #EDE8DF)';
+  card.style.color = 'var(--text-color, #23241F)';
   card.style.border = '1px solid var(--border-color)';
   card.style.padding = '40px';
   card.style.width = '90%';
@@ -387,12 +390,12 @@ function launchSimulatedPayment(orderId, amount, customerInfo, localOrderId, sub
   card.style.fontFamily = 'var(--font-body)';
 
   // Determine current theme style context
-  const isDark = document.body.classList.contains('theme-dark-atelier');
-  const accent = isDark ? '#A8703F' : '#B08D57';
+  const isEvening = document.documentElement.classList.contains('theme-evening');
+  const accent = isEvening ? '#B08D5C' : '#2F4538';
 
   card.innerHTML = `
     <h3 style="font-family: var(--font-display); font-size: 1.5rem; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 0.1em;">
-      Maison Éther Payment
+      Thistlewood Payment
     </h3>
     <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); margin-bottom: 15px;">
       Razorpay Test Simulation
@@ -406,10 +409,10 @@ function launchSimulatedPayment(orderId, amount, customerInfo, localOrderId, sub
     </div>
     
     <div style="display: flex; flex-direction: column; gap: 15px;">
-      <button id="sim-pay-success-btn" style="background-color: var(--text-color); color: var(--bg-color); border: 1px solid var(--text-color); padding: 16px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+      <button id="sim-pay-success-btn" style="background-color: var(--text-color); color: var(--bg-color); border: 1px solid var(--text-color); padding: 16px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; cursor: pointer; font-weight: bold; transition: all 0.3s ease; font-family: var(--font-body);">
         Simulate Successful Payment
       </button>
-      <button id="sim-pay-fail-btn" style="background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 16px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s ease;">
+      <button id="sim-pay-fail-btn" style="background-color: transparent; color: var(--text-color); border: 1px solid var(--border-color); padding: 16px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s ease; font-family: var(--font-body);">
         Simulate Declined Payment
       </button>
     </div>
@@ -420,7 +423,7 @@ function launchSimulatedPayment(orderId, amount, customerInfo, localOrderId, sub
 
   // Success flow simulation
   document.getElementById('sim-pay-success-btn').addEventListener('click', async () => {
-    overlay.innerHTML = '<div style="color: #FFF; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.15em;">Verifying payment transaction...</div>';
+    overlay.innerHTML = '<div style="color: #FFF; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.15em; font-family: var(--font-body);">Verifying payment transaction...</div>';
     
     try {
       const verifyRes = await fetch('/api/verify-payment', {
@@ -435,7 +438,7 @@ function launchSimulatedPayment(orderId, amount, customerInfo, localOrderId, sub
 
       const verifyResult = await verifyRes.json();
       if (verifyRes.ok && verifyResult.success) {
-        localStorage.removeItem('maison_ether_cart');
+        localStorage.removeItem('thistlewood_cart');
         cart = [];
         document.body.removeChild(overlay);
         window.location.href = `/order-confirmation?order_id=${verifyResult.order_id}`;

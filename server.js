@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
 const multer = require('multer');
+const { createClient } = require('@supabase/supabase-js');
 
 // Load environment configurations
 dotenv.config();
@@ -58,8 +59,8 @@ app.get('/', async (req, res) => {
     const allProducts = await db.getProducts();
     const featured = allProducts.slice(0, 3); // Get latest 3
     res.render('index', {
-      title: "Maison Éther | High Couture & Artisanal Garments",
-      description: "Maison Éther is a Parisian clothing brand dedicated to slow-fashion, luxurious fabric selections, and distinct, modern silhouettes.",
+      title: "Thistlewood | English Tailoring & Heritage Garments",
+      description: "Thistlewood is a British luxury clothing brand dedicated to modernized English tailoring, premium woolen fabrics, and structured silhouettes.",
       featuredProducts: featured
     });
   } catch (err) {
@@ -74,8 +75,8 @@ app.get('/shop', async (req, res) => {
     const category = req.query.category || null;
     const products = await db.getProducts(category);
     res.render('shop', {
-      title: "La Collection - Shop | Maison Éther",
-      description: "Discover Maison Éther's curated garments. Explore coats, dresses, knitwear, and tailored wool trousers.",
+      title: "The Collection - Shop | Thistlewood",
+      description: "Discover Thistlewood's curated garments. Explore tailored trench coats, silk slip dresses, cable knit sweaters, and pleated flannel trousers.",
       products: products
     });
   } catch (err) {
@@ -90,8 +91,8 @@ app.get('/products/:slug', async (req, res) => {
     const product = await db.getProductBySlug(req.params.slug);
     if (!product) {
       return res.status(404).render('faq', {
-        title: "Page Not Found - Maison Éther",
-        description: "The requested couture piece could not be located."
+        title: "Page Not Found - Thistlewood",
+        description: "The requested piece could not be located."
       });
     }
 
@@ -111,7 +112,7 @@ app.get('/products/:slug', async (req, res) => {
       "sku": product.id,
       "brand": {
         "@type": "Brand",
-        "name": "Maison Éther"
+        "name": "Thistlewood"
       },
       "offers": {
         "@type": "Offer",
@@ -122,7 +123,7 @@ app.get('/products/:slug', async (req, res) => {
     };
 
     res.render('product', {
-      title: `${product.name} - Maison Éther`,
+      title: `${product.name} - Thistlewood`,
       description: product.meta_description || product.description.substring(0, 150),
       product: product,
       relatedProducts: related,
@@ -137,7 +138,7 @@ app.get('/products/:slug', async (req, res) => {
 // Cart page
 app.get('/cart', (req, res) => {
   res.render('cart', {
-    title: "Your Shopping Bag | Maison Éther",
+    title: "Your Shopping Bag | Thistlewood",
     description: "Review garments in your private selection bag before checking out."
   });
 });
@@ -145,8 +146,8 @@ app.get('/cart', (req, res) => {
 // Checkout page
 app.get('/checkout', (req, res) => {
   res.render('checkout', {
-    title: "Checkout | Maison Éther",
-    description: "Complete shipping and secure payment procedures for your Maison Éther order."
+    title: "Checkout | Thistlewood",
+    description: "Complete shipping and secure payment procedures for your Thistlewood order."
   });
 });
 
@@ -162,8 +163,8 @@ app.get('/order-confirmation', async (req, res) => {
     if (!order) return res.redirect('/shop');
 
     res.render('order-confirmation', {
-      title: "Exquisite Choice - Order Confirmed | Maison Éther",
-      description: "Your Maison Éther purchase summary, invoice details, and shipment timeline.",
+      title: "Exquisite Choice - Order Confirmed | Thistlewood",
+      description: "Your Thistlewood purchase summary, invoice details, and shipment timeline.",
       order: order
     });
   } catch (err) {
@@ -175,21 +176,21 @@ app.get('/order-confirmation', async (req, res) => {
 // Static pages
 app.get('/about', (req, res) => {
   res.render('about', {
-    title: "L'Atelier Story - About Us | Maison Éther",
-    description: "Read about our history, master tailors, sustainable fabrics, and Parisian slow-fashion workshop."
+    title: "Heritage & Story - About Us | Thistlewood",
+    description: "Read about our history, master tailors, sustainable fabrics, and English tailoring studio."
   });
 });
 
 app.get('/contact', (req, res) => {
   res.render('contact', {
-    title: "Connect With Us | Maison Éther",
+    title: "Connect With Us | Thistlewood",
     description: "Inquire about fitting bookings, fabric selections, or custom adjustments."
   });
 });
 
 app.get('/faq', (req, res) => {
   res.render('faq', {
-    title: "Client Care FAQ | Maison Éther",
+    title: "Client Care FAQ | Thistlewood",
     description: "Answers regarding custom sizing, shipping priorities, packaging, and archive exchanges."
   });
 });
@@ -322,6 +323,14 @@ app.post('/api/verify-payment', async (req, res) => {
 // ADMIN CONSOLE ROUTES & ACTIONS
 // ==========================================================================
 
+// Global administrative session validator to secure /admin/* routes
+app.use('/admin', (req, res, next) => {
+  if (req.path === '/login') {
+    return next();
+  }
+  return adminAuth(req, res, next);
+});
+
 // GET Login
 app.get('/admin/login', (req, res) => {
   const token = req.cookies.admin_session;
@@ -349,7 +358,7 @@ app.get('/admin/logout', (req, res) => {
 });
 
 // GET Dashboard Index
-app.get('/admin', adminAuth, async (req, res) => {
+app.get('/admin', async (req, res) => {
   try {
     const stats = await db.getDashboardStats();
     res.render('admin-dashboard', {
@@ -363,7 +372,7 @@ app.get('/admin', adminAuth, async (req, res) => {
 });
 
 // GET Product Listings / CRUD Forms
-app.get('/admin/products', adminAuth, async (req, res) => {
+app.get('/admin/products', async (req, res) => {
   try {
     const action = req.query.action || 'list'; // list, add, edit
     const productId = req.query.id || null;
@@ -388,7 +397,7 @@ app.get('/admin/products', adminAuth, async (req, res) => {
 });
 
 // POST Add product
-app.post('/admin/products/add', adminAuth, async (req, res) => {
+app.post('/admin/products/add', async (req, res) => {
   try {
     const { name, slug, price, category, description, care_instructions, colors_csv, product_images, size_S, size_M, size_L, size_XL, meta_title, meta_description } = req.body;
     
@@ -416,7 +425,7 @@ app.post('/admin/products/add', adminAuth, async (req, res) => {
 });
 
 // POST Edit product
-app.post('/admin/products/edit/:id', adminAuth, async (req, res) => {
+app.post('/admin/products/edit/:id', async (req, res) => {
   try {
     const { name, slug, price, category, description, care_instructions, colors_csv, product_images, size_S, size_M, size_L, size_XL, meta_title, meta_description } = req.body;
     
@@ -453,7 +462,7 @@ app.delete('/api/admin/products/:id', adminAuth, async (req, res) => {
 });
 
 // GET Orders ledger
-app.get('/admin/orders', adminAuth, async (req, res) => {
+app.get('/admin/orders', async (req, res) => {
   try {
     const orders = await db.getOrders();
     res.render('admin-orders', {
@@ -477,15 +486,46 @@ app.post('/api/admin/orders/:id/status', adminAuth, async (req, res) => {
   }
 });
 
-// POST Upload Image File (Admin multipart upload)
-app.post('/api/admin/upload-image', adminAuth, upload.single('image'), (req, res) => {
+// POST Upload Image File (Admin multipart upload with Supabase Storage integration)
+app.post('/api/admin/upload-image', adminAuth, upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'No file uploaded' });
   }
 
-  // Generate public file path URL
-  const fileUrl = `/uploads/${req.file.filename}`;
-  res.json({ success: true, url: fileUrl });
+  const useSupabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (useSupabase) {
+    try {
+      const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+      const fileBuffer = fs.readFileSync(req.file.path);
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      
+      const { data, error } = await supabaseAdmin.storage
+        .from('product-images')
+        .upload(fileName, fileBuffer, {
+          contentType: req.file.mimetype,
+          upsert: true
+        });
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabaseAdmin.storage
+        .from('product-images')
+        .getPublicUrl(fileName);
+
+      // Clean up the local temp file to keep disk clean on ephemeral/Render instances
+      fs.unlinkSync(req.file.path);
+
+      return res.json({ success: true, url: publicUrl });
+    } catch (err) {
+      console.error('Supabase Storage Upload Error, falling back to disk:', err);
+      const fileUrl = `/uploads/${req.file.filename}`;
+      return res.json({ success: true, url: fileUrl, warning: 'Uploaded locally due to cloud storage failure.' });
+    }
+  } else {
+    // Local fallback
+    const fileUrl = `/uploads/${req.file.filename}`;
+    res.json({ success: true, url: fileUrl });
+  }
 });
 
 // ==========================================================================
@@ -494,9 +534,9 @@ app.post('/api/admin/upload-image', adminAuth, upload.single('image'), (req, res
 
 app.listen(PORT, () => {
   console.log(`\n========================================================`);
-  console.log(`MAISON ÉTHER LUXURY E-COMMERCE SERVER RUNNING`);
+  console.log(`THISTLEWOOD LUXURY E-COMMERCE SERVER RUNNING`);
   console.log(`Local Access: http://localhost:${PORT}`);
   console.log(`Admin Console: http://localhost:${PORT}/admin`);
-  console.log(`Default Credentials: admin@maisonether.com / Couture2026!`);
+  console.log(`Default Credentials: admin@thistlewood.com / Couture2026!`);
   console.log(`========================================================\n`);
 });

@@ -1,7 +1,7 @@
 {
-  "name": "maison-ether",
+  "name": "thistlewood",
   "version": "1.0.0",
-  "description": "Luxury Couture Dual-Theme E-Commerce Site",
+  "description": "Thistlewood Luxury Heritage Dual-Theme E-Commerce Site",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

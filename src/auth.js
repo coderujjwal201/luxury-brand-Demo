@@ -37,7 +37,7 @@ module.exports = {
         } else {
             // Local fallback validation
             if (token === process.env.SESSION_SECRET) {
-                req.adminUser = { email: process.env.ADMIN_EMAIL || 'admin@maisonether.com' };
+                req.adminUser = { email: process.env.ADMIN_EMAIL || 'admin@thistlewood.com' };
                 return next();
             }
             res.clearCookie('admin_session');
@@ -58,7 +58,7 @@ module.exports = {
                 email: data.user.email
             };
         } else {
-            const expectedEmail = process.env.ADMIN_EMAIL || 'admin@maisonether.com';
+            const expectedEmail = process.env.ADMIN_EMAIL || 'admin@thistlewood.com';
             const expectedPassword = process.env.ADMIN_PASSWORD || 'Couture2026!';
             
             if (email === expectedEmail && password === expectedPassword) {

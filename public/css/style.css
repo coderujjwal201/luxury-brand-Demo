@@ -6,74 +6,82 @@
  * - Unified responsive layouts, interactive micro-animations, and clean admin panel.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cinzel:wght@300..800&family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap');
 
 /* ==========================================================================
    DESIGN TOKENS (CSS VARIABLES)
    ========================================================================== */
 
 :root {
-  /* Default: Theme A - Quiet Luxury (Light, Parisian Editorial) */
-  --bg-color: #F7F5F0;             /* Warm Ivory/Bone */
-  --text-color: #1A1815;           /* Charcoal */
-  --text-muted: #6A655F;
-  --accent-color: #B08D57;         /* Muted Antique Gold */
-  --accent-secondary: #2C3B2E;     /* Deep Forest Green */
+  /* Daylight Theme (Default) */
+  --bg-color: #F5F2EB;             /* Warm Alabaster */
+  --bg-alt: #EAE6DB;               /* Muted Stone Surface */
+  --text-color: #23241F;           /* Deep Warm Ink */
+  --text-muted: #6B6A5F;
+  --accent-color: #8B7B8C;         /* Heather (Muted Thistle-Mauve) */
+  --accent-green: #2F4538;         /* Bottle Green */
+  --accent-brass: #A47B4C;         /* Aged Brass */
   
-  --font-display: 'Bodoni Moda', serif;
-  --font-body: 'Jost', sans-serif;
-  --letter-spacing-display: -0.02em;
-  --letter-spacing-body: 0.08em;
-  --letter-spacing-button: 0.15em;
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Archivo', sans-serif;
+  --letter-spacing-display: -0.01em;
+  --letter-spacing-body: 0.04em;
+  --letter-spacing-button: 0.08em;
   
-  --border-color: rgba(26, 24, 21, 0.15);
-  --border-focus: #B08D57;
-  --button-bg: #1A1815;
-  --button-text: #F7F5F0;
-  --button-border: #1A1815;
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  --vignette-opacity: 0;
+  --border-color: rgba(35, 36, 31, 0.15);
+  --border-focus: #2F4538;         /* Focus border uses Bottle Green in light mode */
+  --button-bg: #2F4538;            /* Bottle Green is primary button in light mode */
+  --button-text: #F5F2EB;
+  --button-border: #2F4538;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --vignette-opacity: 0.05;
+  --header-bg: rgba(245, 242, 235, 0.9);
   --spotlight-display: none;
   --lookbook-display: flex;
 }
 
-body.theme-dark-atelier {
-  /* Theme B - Dark Atelier (Moody, Evening-Wear) */
-  --bg-color: #0F0E0D;             /* Deep Charcoal-Black */
-  --text-color: #EDE9E2;           /* Warm Off-White */
-  --text-muted: #A39E96;
-  --accent-color: #A8703F;         /* Warm Brass/Copper */
-  --accent-secondary: #4A1F1F;     /* Deep Burgundy */
+html.theme-evening {
+  /* Evening Theme (Dark Mode) */
+  --bg-color: #14201A;             /* Deep Bottle-Green-Black */
+  --bg-alt: #1C2921;               /* Card Surface */
+  --text-color: #EDE6D8;           /* Warm Parchment */
+  --text-muted: #9CA69B;
+  --accent-color: #A18BA0;         /* Heather (Secondary Accent) */
+  --accent-green: #3D5A46;         /* Lighter Green borders */
+  --accent-brass: #B08D5C;         /* Aged Brass (Primary CTA Accent) */
   
-  --font-display: 'Cinzel', serif;
-  --font-body: 'Jost', sans-serif; /* Keep Jost but widen spacing for couture feel */
-  --letter-spacing-display: 0.05em;
-  --letter-spacing-body: 0.12em;
-  --letter-spacing-button: 0.20em;
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Archivo', sans-serif;
+  --letter-spacing-display: 0.02em;
+  --letter-spacing-body: 0.06em;
+  --letter-spacing-button: 0.12em;
   
-  --border-color: rgba(237, 233, 226, 0.15);
-  --border-focus: #A8703F;
-  --button-bg: #EDE9E2;
-  --button-text: #0F0E0D;
-  --button-border: #EDE9E2;
-  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  --border-color: rgba(237, 230, 216, 0.15);
+  --border-focus: #B08D5C;         /* Focus border uses Aged Brass in dark mode */
+  --button-bg: #B08D5C;            /* Aged Brass is primary button in dark mode */
+  --button-text: #14201A;
+  --button-border: #B08D5C;
+  --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
   --vignette-opacity: 0.25;
+  --header-bg: rgba(20, 32, 26, 0.9);
   --spotlight-display: block;
   --lookbook-display: none;
 }
 
-/* Administrative layout styling overrides (always clean/functional) */
-body.admin-body {
-  --bg-color: #F8F9FA;
-  --text-color: #212529;
-  --text-muted: #6C757D;
-  --accent-color: #4F46E5; /* Indigo admin brand */
-  --border-color: #DEE2E6;
-  --button-bg: #4F46E5;
-  --button-text: #FFFFFF;
-  --button-border: #4F46E5;
-  --font-display: 'Jost', sans-serif;
-  --font-body: 'Jost', sans-serif;
+/* Administrative layout styling overrides (Daylight palette, clean/functional) */
+body.admin-body,
+body.admin-body.theme-evening {
+  --bg-color: #EDE8DF;
+  --bg-alt: #E2DCCF;
+  --text-color: #23241F;
+  --text-muted: #6B6A5F;
+  --accent-color: #2F4538;         /* Bottle Green is main admin brand brand */
+  --border-color: rgba(35, 36, 31, 0.15);
+  --button-bg: #2F4538;
+  --button-text: #EDE8DF;
+  --button-border: #2F4538;
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Archivo', sans-serif;
   --letter-spacing-body: 0.03em;
 }
 
@@ -158,14 +166,10 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: rgba(247, 245, 240, 0.9);
+  background-color: var(--header-bg);
   backdrop-filter: blur(15px);
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.6s ease, border-color 0.6s ease;
-}
-
-body.theme-dark-atelier header {
-  background-color: rgba(15, 14, 13, 0.9);
 }
 
 .header-container {
@@ -377,7 +381,7 @@ body.theme-dark-atelier .theme-toggle-knob {
 .spotlight-base {
   width: 100%;
   height: 100%;
-  background-color: #0F0E0D;
+  background-color: var(--bg-color);
   position: relative;
 }
 
@@ -385,7 +389,7 @@ body.theme-dark-atelier .theme-toggle-knob {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.3; /* low opacity to show texture mask */
+  opacity: 0.25; /* low opacity to show texture mask */
   filter: grayscale(80%) contrast(120%);
 }
 
@@ -399,11 +403,13 @@ body.theme-dark-atelier .theme-toggle-knob {
   background-image: url('https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1200&auto=format&fit=crop'); /* High-res fabric texture background */
   background-size: cover;
   background-position: center;
-  /* Clipping path centered at mouse coordinate variables set by JS */
-  clip-path: circle(120px at var(--mouse-x, 50%) var(--mouse-y, 50%));
-  transition: clip-path 0.05s ease-out;
   z-index: 2;
   filter: contrast(110%);
+  /* Soft spotlight reveal mask */
+  mask-image: radial-gradient(circle 140px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle 140px at var(--mouse-x, 50%) var(--mouse-y, 50%), black 30%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .spotlight-text-overlay {
@@ -1683,6 +1689,66 @@ body.theme-dark-atelier .checkout-summary {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* Purposeful Motion: Subtle entrance animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-section {
+  animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Page load initial entrance (considered animation moment on home page hero) */
+@keyframes heroReveal {
+  from {
+    transform: scale(1.04);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.hero-section {
+  animation: heroReveal 2s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+/* Fade in for product cards */
+.product-card {
+  opacity: 0;
+  animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.product-card:nth-child(1) { animation-delay: 0.1s; }
+.product-card:nth-child(2) { animation-delay: 0.2s; }
+.product-card:nth-child(3) { animation-delay: 0.3s; }
+.product-card:nth-child(4) { animation-delay: 0.4s; }
+.product-card:nth-child(5) { animation-delay: 0.5s; }
+.product-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Dynamic elements transition mappings */
+.btn, .product-card, .logo, .nav-links a {
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Select Option Contrast and Form Legibility */
+select option {
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 /* Accessibility: Respect user motion preferences */

@@ -7,7 +7,7 @@ dotenv.config();
 
 const useSupabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY;
 let supabase = null;
-let jsonDbPath = path.resolve(__dirname, '../maison_ether_db.json');
+let jsonDbPath = path.resolve(__dirname, '../thistlewood_db.json');
 
 if (useSupabase) {
     const { createClient } = require('@supabase/supabase-js');
@@ -51,105 +51,99 @@ function initializeJSONDatabase() {
         products: [
             {
                 id: 'prod_1',
-                name: "L'Éclipse Silk Evening Dress",
-                slug: 'leclipse-silk-evening-dress',
-                description: 'A flowing floor-length evening dress crafted from heavy 30mm mulberry silk. Cut with an asymmetrical cowl neck, delicate bias-cut seams that trace the silhouette, and a dramatic, draped low open back. Designed for effortless grace in high-evening affairs.',
-                care_instructions: 'Dry clean only. Store on a padded hanger away from direct sunlight. Cool iron on reverse side if needed.',
-                price: 1850.00,
+                name: "The Gladstone Tweed Blazer",
+                slug: 'gladstone-tweed-blazer',
+                description: 'A structured, single-breasted blazer tailored from heavy Yorkshire tweed wool. Designed with high armholes, clean canvased front chests, and dual rear vents reflecting classical English field jackets. Modernized through a sharp, contemporary silhouette.',
+                care_instructions: 'Professional dry clean only. Brush down with a soft clothes brush to clean. Store in a cool, dry wardrobe on a structured oak hanger.',
+                price: 1450.00,
+                category: 'Outerwear',
+                colors: ['Heather', 'Forest Green'],
+                images: [
+                    'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1200&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1200&auto=format&fit=crop'
+                ],
+                meta_title: "The Gladstone Tweed Blazer - Thistlewood",
+                meta_description: 'A tailored single-breasted tweed jacket crafted from heavy Yorkshire wool. Features modern English lines.'
+            },
+            {
+                id: 'prod_2',
+                name: 'The Heather Slip Dress',
+                slug: 'heather-slip-dress',
+                description: 'An elegant bias-cut dress crafted from heavy sand-washed silk. Featuring an understated cowl neck and a deep cowl back. Inspired by wild heather fields in Scotland, dyed a deep thistle-mauve color.',
+                care_instructions: 'Dry clean only. Steam gently. Do not wring or tumble dry.',
+                price: 890.00,
                 category: 'Dresses',
-                colors: ['Noir', 'Burgundy'],
+                colors: ['Heather', 'Deep Burgundy'],
                 images: [
                     'https://images.unsplash.com/photo-1539008885128-40d24f3b8015?q=80&w=1200&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1200&auto=format&fit=crop'
                 ],
-                meta_title: "L'Éclipse Silk Evening Dress - Maison Éther",
-                meta_description: 'Discover the L\'Éclipse evening gown in heavy mulberry silk. Signature draped cowl back and asymmetric couture cut.',
-                created_at: new Date().toISOString()
-            },
-            {
-                id: 'prod_2',
-                name: 'Le Vent Woolen Trench Coat',
-                slug: 'le-vent-woolen-trench-coat',
-                description: 'A structural, double-breasted double-faced trench coat tailored from brushed virgin wool and cashmere. Designed with drop shoulders, an oversized storm flap, hand-finished blind seams, and an adjustable belt to cinch the waist for a voluminous silhouette.',
-                care_instructions: 'Professional dry clean only. Brush with a soft wool brush between wears to maintain fabric nap.',
-                price: 2450.00,
-                category: 'Outerwear',
-                colors: ['Bone', 'Charcoal'],
-                images: [
-                    'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1200&auto=format&fit=crop'
-                ],
-                meta_title: 'Le Vent Virgin Wool Trench Coat - Maison Éther',
-                meta_description: 'An oversized double-faced wool trench coat. Expertly hand-finished blind seams and structural silhouette.',
-                created_at: new Date().toISOString()
+                meta_title: 'The Heather Silk Slip Dress - Thistlewood',
+                meta_description: 'Discover the Heather silk slip dress. Bias-cut styling with signature cowl detail in thistle-mauve.'
             },
             {
                 id: 'prod_3',
-                name: "L'Aura Cashmere Knit Sweater",
-                slug: 'laura-cashmere-knit-sweater',
-                description: 'A relaxed, heavy rib-knit sweater crafted from 100% sustainably-sourced Mongolian cashmere. Soft mockup collar, dropped shoulders, and subtle side slits. The loose knit technique creates an incredibly soft, cloud-like drape.',
-                care_instructions: 'Hand wash cold with cashmere wash. Dry flat on a towel. Do not wring or hang to dry.',
-                price: 980.00,
+                name: "The Shetland Cable Sweater",
+                slug: 'shetland-cable-sweater',
+                description: 'A thick, traditional cable-knit sweater made from un-dyed Shetland wool. Features a rugged crew neck, drop shoulders, and organic ribbed hems. Designed for a comfortable fit that provides exceptional warmth.',
+                care_instructions: 'Hand wash cold with wool detergent. Dry flat. Never hang while wet.',
+                price: 680.00,
                 category: 'Knitwear',
-                colors: ['Bone', 'Forest Green'],
+                colors: ['Bone', 'Bottle Green'],
                 images: [
                     'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1200&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1200&auto=format&fit=crop'
                 ],
-                meta_title: "L'Aura Cashmere Knit Sweater - Maison Éther",
-                meta_description: 'Chunky rib-knit sweater in premium Mongolian cashmere. Dropped shoulders, mockup neck, relaxed editorial fit.',
-                created_at: new Date().toISOString()
+                meta_title: "The Shetland Cable Sweater - Thistlewood",
+                meta_description: 'Traditional cable-knit crewneck sweater crafted from un-dyed Shetland wool.'
             },
             {
                 id: 'prod_4',
-                name: 'La Plisse Tailored Trousers',
-                slug: 'la-plisse-tailored-trousers',
-                description: 'High-waisted, fluid wide-leg trousers tailored in wool crepe. Designed with sharp double front pleats, pressed creases, side slip pockets, and an internal sartorial waistband. Offers a clean, architectural drape that elongates the frame.',
-                care_instructions: 'Dry clean only. Steam or press with a damp cloth between the iron and fabric.',
-                price: 1150.00,
+                name: 'The Savile Pleated Trouser',
+                slug: 'savile-pleated-trouser',
+                description: 'High-rise pleated trousers tailored in heavy wool flannel from English mills. Cut with a fluid wide leg, adjustable side tabs, double pleats, and a classic cuffed hem for a clean, sharp break.',
+                care_instructions: 'Professional dry clean only. Steam or press with a damp pressing cloth.',
+                price: 750.00,
                 category: 'Trousers',
                 colors: ['Charcoal', 'Bone'],
                 images: [
                     'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=1200&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop'
                 ],
-                meta_title: 'La Plisse Wool Crepe Tailored Trousers - Maison Éther',
-                meta_description: 'High-waisted wide-leg trousers with pressed double pleats. Tailored in structured wool crepe.',
-                created_at: new Date().toISOString()
+                meta_title: 'The Savile Pleated Flannel Trouser - Thistlewood',
+                meta_description: 'Tailored high-rise double-pleated flannel trousers with side adjustments and cuffed hems.'
             },
             {
                 id: 'prod_5',
-                name: 'Le Corsage Satin Blouse',
-                slug: 'le-corsage-satin-blouse',
-                description: 'A sculptural, high-neck blouse tailored from fluid silk satin. Features soft gathering at the collar, a concealed back zip, structured shoulders, and elongated cuffs with covered buttons. A timeless balance of tailored structure and soft texture.',
-                care_instructions: 'Dry clean only. Do not wash or spot clean with water. Handle with clean hands to avoid oils.',
-                price: 890.00,
+                name: 'The Yorkshire Storm Coat',
+                slug: 'yorkshire-storm-coat',
+                description: 'A double-breasted heavy trench coat tailored from water-repellent English gabardine wool. Features structural storm flaps, hand-sewn buttonholes, horn buttons, and a belted waist. Built to withstand elements with uncompromising sophistication.',
+                care_instructions: 'Dry clean only. Hang on a wide hanger in a breathable garment bag.',
+                price: 1950.00,
+                category: 'Outerwear',
+                colors: ['Bottle Green', 'Charcoal'],
+                images: [
+                    'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1200&auto=format&fit=crop'
+                ],
+                meta_title: 'The Yorkshire Storm Wool Trench Coat - Thistlewood',
+                meta_description: 'A double-breasted gabardine wool storm coat with protective storm flaps.'
+            },
+            {
+                id: 'prod_6',
+                name: 'The Wessex Linen Shirt',
+                slug: 'wessex-linen-shirt',
+                description: 'A minimalist band-collar shirt cut from organic Irish linen. Features a button-through front with mother-of-pearl buttons, a single chest pocket, and clean French seams. Soft, breathable, and structured.',
+                care_instructions: 'Wash cold on gentle cycle. Hang to dry. Iron damp for a crisp look, or wear wrinkled for character.',
+                price: 420.00,
                 category: 'Tops',
-                colors: ['Pearl White', 'Noir'],
+                colors: ['Pearl White', 'Deep Burgundy'],
                 images: [
                     'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1200&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?q=80&w=1200&auto=format&fit=crop'
                 ],
-                meta_title: 'Le Corsage Silk Satin Blouse - Maison Éther',
-                meta_description: 'Elegant high-neck blouse in premium silk satin. Sculptural gathering and elongated French-style cuffs.',
-                created_at: new Date().toISOString()
-            },
-            {
-                id: 'prod_6',
-                name: 'Le Smoking Evening Blazer',
-                slug: 'le-smoking-evening-blazer',
-                description: 'A structured, single-breasted blazer in worsted wool crepe, paying homage to classic Parisian tailoring. Featuring custom grosgrain silk satin shawl lapels, a breast pocket, double welt pockets, and structural padded shoulders.',
-                care_instructions: 'Professional dry clean only. Store in a garment cover bag to protect fabric sheen.',
-                price: 1950.00,
-                category: 'Outerwear',
-                colors: ['Charcoal-Black'],
-                images: [
-                    'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?q=80&w=1200&auto=format&fit=crop',
-                    'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1200&auto=format&fit=crop'
-                ],
-                meta_title: 'Le Smoking Tuxedo Blazer - Maison Éther',
-                meta_description: 'Parisian tailoring redefined. Worsted wool crepe jacket with silk satin shawl lapels and structured fit.',
-                created_at: new Date().toISOString()
+                meta_title: 'The Wessex Linen Shirt - Thistlewood',
+                meta_description: 'Classic band-collar Irish linen shirt with French seams and mother-of-pearl buttons.'
             }
         ],
         product_variants: [],
@@ -168,7 +162,7 @@ function initializeJSONDatabase() {
     }
 
     writeJSONDb(defaultDb);
-    console.log('Database Service: Initial seed data written to maison_ether_db.json.');
+    console.log('Database Service: Initial seed data written to thistlewood_db.json.');
 }
 
 function generateUUID() {
