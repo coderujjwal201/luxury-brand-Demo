@@ -182,6 +182,66 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.07; /* 7% opacity for a visible, refined luxury filmic texture */
+  mix-blend-mode: overlay; /* overlay blend mode as specified */
+  animation: noiseAnimation 8s steps(10) infinite;
+}
+
+@keyframes noiseAnimation {
+  0% { background-position: 0% 0%; }
+  10% { background-position: 1% 2%; }
+  20% { background-position: -2% 4%; }
+  30% { background-position: 3% -1%; }
+  40% { background-position: -1% 3%; }
+  50% { background-position: 2% -2%; }
+  60% { background-position: -3% 1%; }
+  70% { background-position: 1% 3%; }
+  80% { background-position: -2% -1%; }
+  90% { background-position: 3% 2%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* Ambient Corner Glow */
+.ambient-glow {
+  position: absolute;
+  top: -150px;
+  right: -150px;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(100px);
+  -webkit-filter: blur(100px);
+  background: radial-gradient(circle, var(--accent-brass) 0%, transparent 70%);
+  opacity: 0.13; /* Light theme: 12-15% (13%) */
+  transition: opacity 350ms ease-in-out;
+  animation: glowDrift 22s ease-in-out infinite alternate;
+}
+
+html.theme-evening .ambient-glow {
+  opacity: 0.22; /* Dark theme: 20-25% (22%) */
+}
+
+@keyframes glowDrift {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-50px, 40px); /* drift in position by 40-60px */
+  }
+}
+
 h1, h2 {
   font-family: var(--font-display);
   font-weight: 600;
@@ -444,6 +504,7 @@ html.theme-evening .theme-toggle-knob {
   width: 100%;
   height: 100%;
   background-color: #E2DFD8;
+  overflow: hidden;
 }
 
 .lookbook-image-container img {
@@ -487,6 +548,7 @@ html.theme-evening .theme-toggle-knob {
   height: 100%;
   background-color: var(--bg-color);
   position: relative;
+  overflow: hidden;
 }
 
 .spotlight-base img {
@@ -1937,6 +1999,24 @@ select option {
   }
 }
 
+@keyframes heroPanZoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes opacityFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes heroTextReveal {
   from {
     transform: translateY(15px);
@@ -1950,7 +2030,8 @@ select option {
 
 .lookbook-image-container img,
 .spotlight-base img {
-  animation: heroImgReveal 900ms ease-out forwards;
+  animation: heroImgReveal 900ms ease-out forwards,
+             heroPanZoom 28s ease-in-out 900ms alternate infinite;
 }
 
 .lookbook-overlay,
@@ -1970,5 +2051,19 @@ select option {
     scroll-behavior: auto !important;
     transition-duration: 0s !important;
     transition-delay: 0s !important;
+  }
+
+  body::after {
+    animation: none !important;
+  }
+
+  .ambient-glow {
+    animation: none !important;
+  }
+
+  .lookbook-image-container img,
+  .spotlight-base img {
+    animation: opacityFade 900ms ease-out forwards !important;
+    transform: none !important;
   }
 }
