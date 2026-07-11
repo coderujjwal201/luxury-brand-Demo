@@ -175,17 +175,46 @@ function initializeSpotlight() {
  * Care, Sizing, and Shipping accordions on Product details
  */
 function initializeProductAccordions() {
+  const items = document.querySelectorAll('.accordion-item');
+  if (items.length === 0) return;
+
+  // Initialize active item styles on load
+  items.forEach(item => {
+    const content = item.querySelector('.accordion-content');
+    if (content) {
+      if (item.classList.contains('active')) {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        content.style.paddingBottom = '20px';
+      } else {
+        content.style.maxHeight = '0px';
+        content.style.paddingBottom = '0px';
+      }
+    }
+  });
+
   const headers = document.querySelectorAll('.accordion-header');
   headers.forEach(header => {
     header.addEventListener('click', () => {
       const item = header.parentElement;
       const isActive = item.classList.contains('active');
       
-      // Close other headers
-      document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+      // Close other items
+      items.forEach(i => {
+        i.classList.remove('active');
+        const content = i.querySelector('.accordion-content');
+        if (content) {
+          content.style.maxHeight = '0px';
+          content.style.paddingBottom = '0px';
+        }
+      });
       
       if (!isActive) {
         item.classList.add('active');
+        const content = item.querySelector('.accordion-content');
+        if (content) {
+          content.style.maxHeight = content.scrollHeight + 'px';
+          content.style.paddingBottom = '20px';
+        }
       }
     });
   });
@@ -199,11 +228,14 @@ function initializeMobileMenu() {
   const nav = document.querySelector('.nav-links');
   if (!toggle || !nav) return;
 
+  // Setup active class for current path links
+  setupActiveNavLinks();
+
   toggle.addEventListener('click', () => {
     const isVisible = nav.style.display === 'flex';
     if (isVisible) {
       nav.style.display = 'none';
-      toggle.innerHTML = '&#9776;'; // Hamburger character
+      toggle.innerHTML = '<i data-lucide="menu" style="stroke-width: 1.5px; width: 20px; height: 20px;"></i>';
     } else {
       nav.style.display = 'flex';
       nav.style.flexDirection = 'column';
@@ -215,7 +247,22 @@ function initializeMobileMenu() {
       nav.style.borderBottom = '1px solid var(--border-color)';
       nav.style.padding = '20px';
       nav.style.gap = '20px';
-      toggle.innerHTML = '&times;'; // Cross character
+      toggle.innerHTML = '<i data-lucide="x" style="stroke-width: 1.5px; width: 20px; height: 20px;"></i>';
+    }
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  });
+}
+
+function setupActiveNavLinks() {
+  const currentPath = window.location.pathname;
+  const navLinks = document.querySelectorAll('.nav-links a');
+  navLinks.forEach(link => {
+    if (link.getAttribute('href') === currentPath) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
     }
   });
 }
